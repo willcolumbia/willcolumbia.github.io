@@ -2,15 +2,17 @@ body {
     background: purple;
     font-family: Arial, Helvetica, sans-serif;
 }
-h1 {
-    color: white;
-    text-align: center;
+.assignment-details
+{
+    display: flex;
+    padding: 10px;
+    margin: 10px;
+
 }
-p {
-    color: white;
-    text-align: center;
-}
-h2 {
-    color:white;
-    text-align: center;
+
+a {
+    text-decoration: none
+    color #4D33FF;
+
+
 }
