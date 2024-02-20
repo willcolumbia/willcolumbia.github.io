@@ -1,0 +1,28 @@
+/* body{
+    
+} */
+.my-nav{
+    text-align: center;
+}
+.my-nav h1{
+    font-size: 3em;
+    left:10px;
+    margin-left: 50px;
+}
+.location img{
+    height: 15px;
+    width: 15px;
+}
+.location li{
+    display: inline;
+    
+}
+.my-nav-content li{
+    display: inline;
+    
+}
+.my-nav-content img{
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+}
