@@ -34,7 +34,8 @@ a{color:var(--link)}a:hover{color:var(--link-hover)}
 [hidden]{display:none!important}
 
 .page{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
-.stage{flex:1 1 auto;min-height:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.stage{flex:1 1 auto;min-height:0;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.stage.has-welcome{justify-content:flex-start}
 .scene{position:relative;width:min(100%, calc((100vh - 76px) * 1.7778));width:min(100%, calc((100dvh - 76px) * 1.7778));aspect-ratio:16/9}
 .scene>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 
@@ -118,6 +119,18 @@ body.lights-off .dim{opacity:.32}
 .row .lbl{font-family:var(--pixel);font-size:11px;letter-spacing:1px}
 .row .val{font-size:12px;color:var(--muted-2)}
 
+/* welcome: fills the space under the scene until something is opened */
+.welcome{flex:1 1 0;min-height:0;overflow:auto;width:100%;border-top:1px solid rgba(236,226,198,.08);background:linear-gradient(#0b0908,#080706)}
+.welcome-inner{max-width:1040px;margin:0 auto;padding:24px;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-start}
+.welcome-intro{flex:1 1 320px;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.65}
+.welcome-intro p{margin:0}
+.welcome-intro .title{font-size:24px}
+.welcome-intro .meta{font-size:12px;color:var(--muted)}
+.legend{flex:1 1 380px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.legend .row{flex-direction:row;align-items:center;gap:10px;min-height:44px;padding:8px 12px}
+.legend .row .obj{font-family:var(--pixel);font-size:11px;letter-spacing:1px;color:var(--ink-warm)}
+.legend .row .val{margin-left:auto;text-align:right}
+
 /* footer */
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;min-height:76px;padding:12px 24px;background:#0b0908;border-top:1px solid rgba(236,226,198,.1)}
 .who{display:flex;flex-direction:column;gap:2px}
@@ -129,8 +142,12 @@ body.lights-off .dim{opacity:.32}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:760px){
   .stage{flex-direction:column;justify-content:flex-start}
-  .panel{position:static;width:auto;max-width:none;max-height:none;margin:16px}
+  .panel{position:static;width:auto;max-width:none;max-height:none;margin:16px;align-self:stretch}
   .hs-label,.hint{display:none}
+  .welcome{flex:none;overflow:visible}
+  .welcome-inner{padding:20px 16px}
+  .legend{grid-template-columns:minmax(0,1fr)}
+  body.panel-open .welcome{display:none}
 }
 </style>
 </head>
@@ -413,6 +430,26 @@ body.lights-off .dim{opacity:.32}
 <div class="hint" id="hint">◂  LOOK AROUND THE PORCH — CLICK WHAT CATCHES YOUR EYE  ▸</div>
 </div>
 
+<section class="welcome" id="welcome" aria-labelledby="welcome-title">
+<div class="welcome-inner">
+<div class="welcome-intro">
+<div class="prompt"><span class="dollar">$</span> whoami</div>
+<h1 class="title" id="welcome-title">Hey, I'm Will. Pull up a chair.</h1>
+<p>This is my portfolio, set on a screened-in porch on the South Carolina coast after dark: laptop open, coffee on, cat asleep on the rail.</p>
+<p>Everything on the porch is clickable. Hover over the scene (or tap on a phone) to find my projects, background and how to reach me, or jump straight in from the list.</p>
+<span class="meta">CS grad · University of South Carolina · looking for software engineering &amp; IT roles</span>
+</div>
+<div class="legend" aria-label="What's on the porch">
+<button type="button" class="row" data-open="projects"><span class="obj">Laptop</span><span class="val">projects</span></button>
+<button type="button" class="row" data-open="contact"><span class="obj">Phone</span><span class="val">contact</span></button>
+<button type="button" class="row" data-open="about"><span class="obj">USC flag</span><span class="val">about me</span></button>
+<button type="button" class="row" data-open="stack"><span class="obj">Ravenel Bridge</span><span class="val">my stack</span></button>
+<button type="button" class="row" data-open="why"><span class="obj">Ball &amp; rope</span><span class="val">why hire me</span></button>
+<a class="row" href="https://github.com/willcolumbia" target="_blank" rel="noopener"><span class="obj">Sleeping cat</span><span class="val">GitHub ↗</span></a>
+</div>
+</div>
+</section>
+
 <section class="panel" id="panel" aria-labelledby="panel-path" tabindex="-1" hidden>
 <div class="panel-bar">
 <span class="panel-path" id="panel-path"></span>
@@ -540,6 +577,7 @@ body.lights-off .dim{opacity:.32}
     if (fromEl && panel.hidden) opener = fromEl;
     panel.hidden = false;
     hint.hidden = true;
+    document.body.classList.add('panel-open');
     pathEl.textContent = target.getAttribute('data-path');
     backBtn.hidden = name.indexOf('projects/') !== 0;
     if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
@@ -550,6 +588,7 @@ body.lights-off .dim{opacity:.32}
   function close() {
     panel.hidden = true;
     hint.hidden = false;
+    document.body.classList.remove('panel-open');
     views.forEach(function (v) { v.hidden = true; });
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     if (opener && document.contains(opener)) opener.focus({ preventScroll: true });
@@ -565,6 +604,20 @@ body.lights-off .dim{opacity:.32}
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !panel.hidden) close();
   });
+
+  // Show the welcome only where the scene leaves real room under it;
+  // on narrow screens it always sits below the scene.
+  var stage = document.getElementById('stage');
+  var scene = stage.querySelector('.scene');
+  var welcome = document.getElementById('welcome');
+  var narrow = window.matchMedia('(max-width: 760px)');
+  function fitWelcome() {
+    var room = narrow.matches || stage.clientHeight - scene.offsetHeight >= 170;
+    welcome.hidden = !room;
+    stage.classList.toggle('has-welcome', room);
+  }
+  fitWelcome();
+  window.addEventListener('resize', fitWelcome);
 
   var initial = decodeURIComponent(location.hash.slice(1));
   if (initial) show(initial);
