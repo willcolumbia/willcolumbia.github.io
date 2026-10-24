@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Will Columbia — on the porch</title>
-<meta name="description" content="Will Columbia — Computer Science grad from the University of South Carolina. Projects, stack and contact, from a screened-in porch over the ocean.">
+<meta name="description" content="Will Columbia — IT Technician in Charleston, SC and University of South Carolina Computer Science grad. IT experience, projects and contact, from a screened-in porch over the ocean.">
 <meta property="og:title" content="Will Columbia — on the porch">
-<meta property="og:description" content="CS grad · Columbia, SC · backend → full stack.">
+<meta property="og:description" content="IT technician · Charleston, SC · USC CS '24.">
 <meta property="og:url" content="https://www.willcolumbia.me/">
 <meta name="theme-color" content="#080706">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080706'/%3E%3Cellipse cx='16' cy='17' rx='7' ry='9' fill='%23ffd9a3'/%3E%3Crect x='13' y='5' width='6' height='5' fill='%23e0a45e'/%3E%3C/svg%3E">
@@ -81,6 +81,13 @@ body.lights-off .dim{opacity:.32}
 .hs-label.below{top:calc(100% + 6px);left:50%;transform:translateX(-50%)}
 .hs-label.below-right{top:calc(100% + 6px);right:0}
 .hs-label.above-left{bottom:calc(100% + 6px);left:0}
+.hs-label.above-right{bottom:calc(100% + 6px);right:0}
+.entry{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid var(--line)}
+.entry .when{font-size:11px;color:var(--accent)}
+.entry .role{font-family:var(--pixel);font-size:14px;color:var(--ink-warm)}
+.entry .where{font-size:12px;color:var(--muted-2)}
+.entry .pt{font-size:12px;color:#cfe7cf}
+.tag.green{border:1px solid rgba(134,191,120,.45);color:#cfe7cf}
 
 .hint{position:absolute;top:1%;left:0;right:0;text-align:center;font-family:var(--pixel);font-size:11px;letter-spacing:3px;color:rgba(240,222,190,.8);text-shadow:0 1px 3px #000,0 2px 14px rgba(0,0,0,.95);pointer-events:none}
 
@@ -425,7 +432,8 @@ body.lights-off .dim{opacity:.32}
 <a class="hs" href="https://github.com/willcolumbia" target="_blank" rel="noopener" aria-label="Sleeping cat: open my GitHub" style="left:80.6%;top:59.5%;width:12.3%;height:9.6%"><span class="hs-label below">Sleeping cat · GitHub ↗</span></a>
 <button class="hs" type="button" data-open="about" aria-label="Look at the USC flag: about me" style="left:85.8%;top:5.2%;width:8.4%;height:25.8%"><span class="hs-label below-right">USC flag · about</span></button>
 <button class="hs" type="button" data-open="stack" aria-label="Look at the Ravenel Bridge: my stack" style="left:7.5%;top:37.8%;width:22.2%;height:15.6%"><span class="hs-label below">Ravenel Bridge · stack</span></button>
-<button class="hs" type="button" data-open="why" aria-label="Pick up the ball and jump rope: why hire me" style="left:5.4%;top:91.6%;width:11.6%;height:7.9%"><span class="hs-label above-left">Ball &amp; rope · why me</span></button>
+<button class="hs" type="button" data-open="it" aria-label="Check the home server and switch: IT experience" style="left:89.1%;top:78.2%;width:9.8%;height:20.8%"><span class="hs-label above-right">Server · IT experience</span></button>
+<button class="hs" type="button" data-open="why"aria-label="Pick up the ball and jump rope: why hire me" style="left:5.4%;top:91.6%;width:11.6%;height:7.9%"><span class="hs-label above-left">Ball &amp; rope · why me</span></button>
 
 <div class="hint" id="hint">◂  LOOK AROUND THE PORCH — CLICK WHAT CATCHES YOUR EYE  ▸</div>
 </div>
@@ -437,7 +445,7 @@ body.lights-off .dim{opacity:.32}
 <h1 class="title" id="welcome-title">Hey, I'm Will. Pull up a chair.</h1>
 <p>This is my portfolio, set on a screened-in porch on the South Carolina coast after dark: laptop open, coffee on, cat asleep on the rail.</p>
 <p>Everything on the porch is clickable. Hover over the scene (or tap on a phone) to find my projects, background and how to reach me, or jump straight in from the list.</p>
-<span class="meta">CS grad · University of South Carolina · looking for software engineering &amp; IT roles</span>
+<span class="meta">IT Technician I at Wild Dunes Resort · B.S. Computer Science, University of South Carolina</span>
 </div>
 <div class="legend" aria-label="What's on the porch">
 <button type="button" class="row" data-open="projects"><span class="obj">Laptop</span><span class="val">projects</span></button>
@@ -445,6 +453,7 @@ body.lights-off .dim{opacity:.32}
 <button type="button" class="row" data-open="about"><span class="obj">USC flag</span><span class="val">about me</span></button>
 <button type="button" class="row" data-open="stack"><span class="obj">Ravenel Bridge</span><span class="val">my stack</span></button>
 <button type="button" class="row" data-open="why"><span class="obj">Ball &amp; rope</span><span class="val">why hire me</span></button>
+<button type="button" class="row" data-open="it"><span class="obj">Server</span><span class="val">IT experience</span></button>
 <a class="row" href="https://github.com/willcolumbia" target="_blank" rel="noopener"><span class="obj">Sleeping cat</span><span class="val">GitHub ↗</span></a>
 </div>
 </div>
@@ -506,13 +515,13 @@ body.lights-off .dim{opacity:.32}
 <div class="view" data-view="about" data-path="~/porch/usc-flag" hidden>
 <div class="prompt"><span class="dollar">$</span> cat about.md</div>
 <h2 class="title">William Columbia</h2>
-<p>Computer Science grad from the University of South Carolina, based in Columbia, SC. I'm looking for software engineering and IT roles.</p>
-<p>I live on the backend — C++, Python, Java, Node.js, Django — and I'm working my way toward full stack.</p>
+<p>Computer Science grad from the University of South Carolina, now an IT Technician at Wild Dunes Resort in Charleston: networks, firewalls, Windows and Linux.</p>
+<p>I still write code on the side. Backend by habit (C++, Python, Java, Node.js, Django) and working my way toward full stack.</p>
 <div class="kv">
-<span class="k">degree</span><span>Computer Science · USC</span>
+<span class="k">role</span><span>IT Technician I · Wild Dunes Resort</span>
+<span class="k">degree</span><span>B.S. Computer Science · USC, 2024</span>
 <span class="k">gpa</span><span>3.30</span>
-<span class="k">based</span><span>Columbia, SC</span>
-<span class="k">seeking</span><span>Software engineering / IT</span>
+<span class="k">based</span><span>Charleston, SC</span>
 </div>
 </div>
 
@@ -520,6 +529,7 @@ body.lights-off .dim{opacity:.32}
 <div class="prompt"><span class="dollar">$</span> cat why-me.md</div>
 <div class="stack-6"><span class="h3">## Determined</span><p>As a kid I taught myself to jump rope. That same stubbornness is how I work: keep at it until it clicks.</p></div>
 <div class="stack-6"><span class="h3">## Team-first</span><p>Years of competitive sports made me a leader who brings teammates along and works it out together, not one who hands out orders.</p></div>
+<div class="stack-6"><span class="h3">## Proof</span><p>As assistant head coach at Riverside High (2024–2025), I helped the team to its 5th straight 5A state championship. As a CS teacher assistant at USC (2022–2024), I helped raise department pass rates by 20%.</p></div>
 </div>
 
 <div class="view" data-view="stack" data-path="~/horizon/ravenel-bridge" hidden>
@@ -529,6 +539,27 @@ body.lights-off .dim{opacity:.32}
 <div class="stack"><span class="h4">frontend/</span><div class="tags"><span class="tag amber">HTML</span><span class="tag amber">CSS</span><span class="tag amber">JavaScript</span><span class="tag amber">React</span></div></div>
 </div>
 
+<div class="view" data-view="it" data-path="~/porch/homelab" hidden>
+<div class="prompt"><span class="dollar">$</span> tail ~/homelab/it-experience.log</div>
+<div class="comment"># server's up, switch is blinking: here's what I keep running</div>
+<div class="entry">
+<span class="when">now</span>
+<span class="role">IT Technician I</span>
+<span class="where">Wild Dunes Resort · Charleston, SC</span>
+<span class="pt">› Endpoint protection, firewall configuration and access-control policies across multi-site networks</span>
+<span class="pt">› Mapped and documented existing IT workflows to find inefficiencies and cut operational overhead</span>
+<span class="pt">› Structured troubleshooting across networking, Windows and Linux to keep guest-facing and admin systems up</span>
+</div>
+<div class="entry">
+<span class="when">2024 – 2025</span>
+<span class="role">Account Manager</span>
+<span class="where">Plus Inc · Greenville, SC</span>
+<span class="pt">› Sourced and closed hardware and SaaS deals averaging $252,000 a year, meeting or beating targets</span>
+<span class="pt">› Consulted clients on getting measurable ROI from their hardware and software</span>
+</div>
+<div class="stack"><span class="h4">skills/</span><div class="tags"><span class="tag green">Network administration</span><span class="tag green">Network documentation</span><span class="tag green">PCI-DSS compliance</span><span class="tag green">Firewalls &amp; access control</span><span class="tag green">Endpoint protection</span><span class="tag green">Windows</span><span class="tag green">Linux</span><span class="tag green">Scripting</span></div></div>
+</div>
+
 <div class="view" data-view="contact" data-path="~/desk/phone" hidden>
 <div class="prompt"><span class="dollar">$</span> cat contacts.vcf</div>
 <p>Give me a ring — the coffee's on.</p>
@@ -536,7 +567,7 @@ body.lights-off .dim{opacity:.32}
 <a class="row inline" href="mailto:willcolumbia01@gmail.com"><span class="lbl">Email</span><span class="val">willcolumbia01@gmail.com</span></a>
 <a class="row inline" href="https://linkedin.com/in/williamcolumbia" target="_blank" rel="noopener"><span class="lbl">LinkedIn</span><span class="val">in/williamcolumbia ↗</span></a>
 <a class="row inline" href="https://github.com/willcolumbia" target="_blank" rel="noopener"><span class="lbl">GitHub</span><span class="val">willcolumbia ↗</span></a>
-<a class="row inline" href="media/pdf/William_Columbia_Resume_Arpil2024.pdf" target="_blank" rel="noopener"><span class="lbl">Resume</span><span class="val">PDF ↗</span></a>
+<a class="row inline" href="media/pdf/William_Columbia_Resume.pdf" target="_blank" rel="noopener"><span class="lbl">Resume</span><span class="val">PDF ↗</span></a>
 </div>
 </div>
 
@@ -545,12 +576,13 @@ body.lights-off .dim{opacity:.32}
 </main>
 
 <footer class="bar">
-<div class="who"><span class="name">Will Columbia</span><span class="meta">cs grad · columbia, sc · backend → full stack</span></div>
+<div class="who"><span class="name">Will Columbia</span><span class="meta">it technician · charleston, sc · usc cs '24</span></div>
 <nav aria-label="Sections">
 <button type="button" class="btn" data-open="projects">Projects</button>
 <button type="button" class="btn" data-open="about">About</button>
 <button type="button" class="btn" data-open="why">Why me</button>
 <button type="button" class="btn" data-open="stack">Stack</button>
+<button type="button" class="btn" data-open="it">IT</button>
 <button type="button" class="btn" data-open="contact">Contact</button>
 </nav>
 <button type="button" class="btn lights" id="lights" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg><span id="lights-label">String lights on</span></button>
