@@ -82,6 +82,7 @@ body.lights-off .dim{opacity:.32}
 .hs-label.below-right{top:calc(100% + 6px);right:0}
 .hs-label.above-left{bottom:calc(100% + 6px);left:0}
 .hs-label.above-right{bottom:calc(100% + 6px);right:0}
+.hs-label.left{top:50%;right:calc(100% + 6px);transform:translateY(-50%)}
 .entry{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid var(--line)}
 .entry .when{font-size:11px;color:var(--accent)}
 .entry .role{font-family:var(--pixel);font-size:14px;color:var(--ink-warm)}
@@ -162,7 +163,7 @@ body.lights-off .dim{opacity:.32}
 <div class="page">
 <main class="stage" id="stage">
 <div class="scene">
-<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Night view from right up against the screen of a Southern porch: a laptop, a phone and a steaming coffee mug on a wooden desk, Edison string lights along the screen frame, a USC flag hanging from the header, a small home server with a blinking network switch on the floor, a cat asleep on the railing, and beyond the screen a palmetto, a crescent moon over the ocean and Charleston's Ravenel Bridge lit up on the horizon.">
+<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Night view from right up against the screen of a Southern porch: a laptop, a phone and a steaming coffee mug on a wooden desk, Edison string lights along the screen frame, a USC flag hanging from the header, a small home server with a blinking network switch on the floor, weights and running shoes on the floorboards, a cat asleep on the railing, and beyond the screen a palmetto, a crescent moon over the ocean and Charleston's Ravenel Bridge lit up on the horizon.">
 <defs>
 <linearGradient id="pz-sky" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#04060c"/><stop offset=".65" stop-color="#0f1a2b"/><stop offset="1" stop-color="#262536"/></linearGradient>
 <linearGradient id="pz-sea" x1="0" y1="470" x2="0" y2="720" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#15252e"/><stop offset="1" stop-color="#070f14"/></linearGradient>
@@ -241,7 +242,8 @@ body.lights-off .dim{opacity:.32}
 <rect x="596" y="34" width="10" height="566" fill="#211810"/>
 <rect x="1000" y="34" width="10" height="566" fill="#211810"/>
 
-<!-- USC flag hanging long ways from the header -->
+<!-- USC flag hanging long ways from the header, on the left side of the screen -->
+<g transform="translate(-1280 0)">
 <g stroke="#3a2a1e" stroke-width="2"><line x1="1386" y1="34" x2="1386" y2="52"/><line x1="1494" y1="34" x2="1494" y2="52"/></g>
 <g class="sway">
 <path d="M1388 56 H1492 V268 Q1466 276 1440 270 Q1414 264 1388 272Z" fill="#73000a"/>
@@ -253,6 +255,7 @@ body.lights-off .dim{opacity:.32}
 </g>
 <rect x="1376" y="50" width="128" height="6" rx="3" fill="#4a3626"/>
 <circle cx="1376" cy="53" r="5" fill="#c9a36a"/><circle cx="1504" cy="53" r="5" fill="#c9a36a"/>
+</g>
 
 <!-- Edison string lights along the screen frame -->
 <path d="M0 34 Q200 138 400 34 Q600 138 800 34 Q1000 138 1200 34 Q1400 138 1600 34" fill="none" stroke="#120d09" stroke-width="2.5"/>
@@ -413,14 +416,31 @@ body.lights-off .dim{opacity:.32}
 <path d="M1548 734 C1560 760 1584 778 1600 786" stroke="#7c8594"/>
 </g>
 
-<!-- soccer ball and jump rope on the boards -->
-<ellipse cx="120" cy="884" rx="34" ry="6" fill="#000" fill-opacity=".4"/>
-<circle cx="120" cy="856" r="28" fill="#d6cfbf" fill-opacity=".86"/>
-<polygon points="120,845 131,853 127,866 113,866 109,853" fill="#2b2620"/>
-<path d="M120 828 L120 845M131 853 L145 848M127 866 L136 878M113 866 L104 878M109 853 L95 848" stroke="#2b2620" stroke-width="2"/>
-<path d="M160 884 C186 866 226 894 244 876 C262 858 210 852 190 868 C172 882 226 896 256 888" fill="none" stroke="#9a3f24" stroke-width="3"/>
-<rect x="148" y="879" width="16" height="7" rx="3" fill="#e0a45e" transform="rotate(-20 156 882)"/>
-<rect x="252" y="883" width="16" height="7" rx="3" fill="#e0a45e" transform="rotate(10 260 886)"/>
+<!-- kettlebell, dumbbell and running shoes on the boards, clear of the desk -->
+<g transform="translate(-40 0)">
+<ellipse cx="172" cy="889" rx="112" ry="7" fill="#000" fill-opacity=".45"/>
+<path d="M82 842 Q80 806 98 806 Q116 806 114 842" fill="none" stroke="#55525e" stroke-width="7" stroke-linecap="round"/>
+<circle cx="98" cy="860" r="24" fill="#55525e"/>
+<rect x="80" y="878" width="36" height="8" rx="3" fill="#55525e"/>
+<path d="M84 852 Q88 840 98 838" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
+<rect x="134" y="869" width="60" height="7" rx="2" fill="#b7bcc6"/>
+<rect x="138" y="858" width="7" height="26" rx="2" fill="#6b6875"/>
+<rect x="183" y="858" width="7" height="26" rx="2" fill="#6b6875"/>
+<rect x="124" y="852" width="14" height="38" rx="4" fill="#46434f"/>
+<rect x="190" y="852" width="14" height="38" rx="4" fill="#46434f"/>
+<rect x="126" y="855" width="3" height="32" fill="#fff" fill-opacity=".08"/>
+<g transform="translate(206 848)">
+<path d="M2 26 L2 14 Q4 2 16 2 L26 4 Q34 -1 42 6 L56 16 Q64 21 62 26 Z" fill="#8a3f22"/>
+<rect x="0" y="24" width="66" height="6" rx="3" fill="#b3a790"/>
+</g>
+<g transform="translate(214 860)">
+<path d="M2 26 L2 14 Q4 2 16 2 L26 4 Q34 -1 42 6 L56 16 Q64 21 62 26 Z" fill="#c9663a"/>
+<rect x="0" y="24" width="66" height="6" rx="3" fill="#efe6d3"/>
+<rect x="1" y="6" width="5" height="10" rx="2" fill="#f2e3c4" fill-opacity=".5"/>
+<path d="M24 7 L34 13 M28 4 L38 10" stroke="#f2e3c4" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M6 20 Q24 16 44 22" fill="none" stroke="#f2e3c4" stroke-opacity=".55" stroke-width="2"/>
+</g>
+</g>
 
 <!-- lighting: string lights dim + vignette -->
 <rect width="1600" height="900" fill="#050403" class="dim"/>
@@ -430,10 +450,12 @@ body.lights-off .dim{opacity:.32}
 <button class="hs" type="button" data-open="projects" aria-label="Open the laptop: projects" style="left:33.6%;top:51.8%;width:32.8%;height:34.6%"><span class="hs-label below">Projects</span></button>
 <button class="hs" type="button" data-open="contact" aria-label="Pick up the phone: contact" style="left:21.2%;top:81.7%;width:11.7%;height:6.7%"><span class="hs-label below">Contact</span></button>
 <a class="hs" href="https://github.com/willcolumbia" target="_blank" rel="noopener" aria-label="Sleeping cat: open my GitHub" style="left:80.6%;top:59.5%;width:12.3%;height:9.6%"><span class="hs-label below">GitHub ↗</span></a>
-<button class="hs" type="button" data-open="about" aria-label="Look at the USC flag: about me" style="left:85.8%;top:5.2%;width:8.4%;height:25.8%"><span class="hs-label below-right">About me</span></button>
+<button class="hs" type="button" data-open="about" aria-label="Look at the USC flag: about me" style="left:5.8%;top:5.2%;width:8.4%;height:25.8%"><span class="hs-label below">About me</span></button>
 <button class="hs" type="button" data-open="stack" aria-label="Look at the Ravenel Bridge: my stack" style="left:7.5%;top:37.8%;width:22.2%;height:15.6%"><span class="hs-label below">My stack</span></button>
-<button class="hs" type="button" data-open="it" aria-label="Check the home server and switch: IT experience" style="left:89.1%;top:78.2%;width:9.8%;height:20.8%"><span class="hs-label above-right">IT experience</span></button>
-<button class="hs" type="button" data-open="why"aria-label="Pick up the ball and jump rope: why hire me" style="left:5.4%;top:91.6%;width:11.6%;height:7.9%"><span class="hs-label above-left">Why hire me</span></button>
+<button class="hs" type="button" data-open="it" aria-label="Check the network switch: IT experience" style="left:89.1%;top:78.2%;width:9.8%;height:4.2%"><span class="hs-label above-right">IT experience</span></button>
+<button class="hs" type="button" data-open="homelab" aria-label="Check the home server: homelab" style="left:90.5%;top:82.4%;width:6.9%;height:16.4%"><span class="hs-label left">Homelab</span></button>
+<button class="hs" type="button" data-open="now" aria-label="Grab the coffee: what I'm working on now" style="left:70.6%;top:72.5%;width:6.5%;height:15.6%"><span class="hs-label below">Now</span></button>
+<button class="hs" type="button" data-open="training" aria-label="Look at the weights and running shoes: training" style="left:1.9%;top:88.9%;width:13.3%;height:10.3%"><span class="hs-label above-left">Training</span></button>
 
 <div class="hint" id="hint">◂  LOOK AROUND THE PORCH — CLICK WHAT CATCHES YOUR EYE  ▸</div>
 </div>
@@ -452,8 +474,10 @@ body.lights-off .dim{opacity:.32}
 <button type="button" class="row" data-open="contact"><span class="obj">Contact</span></button>
 <button type="button" class="row" data-open="about"><span class="obj">About me</span></button>
 <button type="button" class="row" data-open="stack"><span class="obj">My stack</span></button>
-<button type="button" class="row" data-open="why"><span class="obj">Why hire me</span></button>
+<button type="button" class="row" data-open="now"><span class="obj">Now</span></button>
 <button type="button" class="row" data-open="it"><span class="obj">IT experience</span></button>
+<button type="button" class="row" data-open="homelab"><span class="obj">Homelab</span></button>
+<button type="button" class="row" data-open="training"><span class="obj">Training</span></button>
 <a class="row" href="https://github.com/willcolumbia" target="_blank" rel="noopener"><span class="obj">GitHub ↗</span></a>
 </div>
 </div>
@@ -517,6 +541,7 @@ body.lights-off .dim{opacity:.32}
 <h2 class="title">William Columbia</h2>
 <p>Computer Science grad from the University of South Carolina, now an IT Technician at Wild Dunes Resort in Charleston: networks, firewalls, Windows and Linux.</p>
 <p>I still write code on the side. Backend by habit (C++, Python, Java, Node.js, Django) and working my way toward full stack.</p>
+<p>Off the clock I coached Riverside High to its 5th straight 5A state championship (2024–2025), and as a CS teacher assistant at USC (2022–2024) I helped raise department pass rates by 20%.</p>
 <div class="kv">
 <span class="k">role</span><span>IT Technician I · Wild Dunes Resort</span>
 <span class="k">degree</span><span>B.S. Computer Science · USC, 2024</span>
@@ -525,11 +550,65 @@ body.lights-off .dim{opacity:.32}
 </div>
 </div>
 
-<div class="view" data-view="why" data-path="~/porch/floorboards" hidden>
-<div class="prompt"><span class="dollar">$</span> cat why-me.md</div>
-<div class="stack-6"><span class="h3">## Determined</span><p>As a kid I taught myself to jump rope. That same stubbornness is how I work: keep at it until it clicks.</p></div>
-<div class="stack-6"><span class="h3">## Team-first</span><p>Years of competitive sports made me a leader who brings teammates along and works it out together, not one who hands out orders.</p></div>
-<div class="stack-6"><span class="h3">## Proof</span><p>As assistant head coach at Riverside High (2024–2025), I helped the team to its 5th straight 5A state championship. As a CS teacher assistant at USC (2022–2024), I helped raise department pass rates by 20%.</p></div>
+<div class="view" data-view="now" data-path="~/desk/coffee" hidden>
+<div class="prompt"><span class="dollar">$</span> cat now.md</div>
+<div class="comment"># what's brewing · updated Nov 2026</div>
+<div class="entry">
+<span class="when">working</span>
+<span class="role">IT Technician I</span>
+<span class="where">Wild Dunes Resort · Charleston, SC</span>
+<span class="pt">› Keeping the resort's networks, firewalls and guest-facing systems up</span>
+</div>
+<div class="entry">
+<span class="when">building</span>
+<span class="role">Chess Teacher</span>
+<span class="where">Python · Flask · Stockfish</span>
+<span class="pt">› Just shipped gliding pieces, premoves, and right-click arrows and square marks</span>
+<span class="pt">› Live in Docker on my home server</span>
+</div>
+<div class="entry">
+<span class="when">running</span>
+<span class="role">The homelab</span>
+<span class="where">13 containers and counting</span>
+<span class="pt">› Self-hosting my apps, my own cloud storage and the monitoring behind them</span>
+</div>
+<div class="entry">
+<span class="when">training</span>
+<span class="role">Kiawah Island Half Marathon</span>
+<span class="where">13.1 mi · December 2026</span>
+<span class="pt">› Lifting and logging miles in my free time</span>
+</div>
+<button type="button" class="row inline" data-open="homelab"><span class="lbl">Tour the homelab</span><span class="val">cd ~/porch/server ›</span></button>
+</div>
+
+<div class="view" data-view="training" data-path="~/porch/floorboards" hidden>
+<div class="prompt"><span class="dollar">$</span> cat training.log</div>
+<div class="comment"># off the clock: weights, miles and an early alarm</div>
+<p>Most of my free time goes to working out. I lift, I run, and I like having a race on the calendar to train toward.</p>
+<div class="entry">
+<span class="when">race day · December 2026</span>
+<span class="role">Kiawah Island Half Marathon</span>
+<span class="where">13.1 mi · Kiawah Island, SC</span>
+<span class="pt">› In training now, building toward race day</span>
+</div>
+<div class="stack"><span class="h4">off-the-clock/</span><div class="tags"><span class="tag amber">Weightlifting</span><span class="tag amber">Running</span><span class="tag amber">Half marathon</span></div></div>
+</div>
+
+<div class="view" data-view="homelab" data-path="~/porch/server" hidden>
+<div class="prompt"><span class="dollar">$</span> ssh nas-ty-boy</div>
+<div class="comment"># the box on the porch floor, up 24/7</div>
+<p>A small home server I built and run myself. It hosts my projects on the public internet and my own private cloud, all in Docker.</p>
+<div class="kv">
+<span class="k">host</span><span>nas-ty-boy</span>
+<span class="k">cpu</span><span>AMD Ryzen 3 3200G · 4 cores</span>
+<span class="k">storage</span><span>250 GB NVMe SSD</span>
+<span class="k">os</span><span>Ubuntu 26.04 LTS</span>
+<span class="k">runs</span><span>13 Docker containers</span>
+</div>
+<div class="stack"><span class="h4">self-hosted/</span><div class="tags"><span class="tag amber">Chess Teacher</span><span class="tag amber">Nextcloud</span></div></div>
+<div class="stack"><span class="h4">network/</span><div class="tags"><span class="tag green">Tailscale Funnel</span><span class="tag green">Cloudflare Tunnel</span><span class="tag green">Twingate</span><span class="tag green">Nginx Proxy Manager</span></div></div>
+<div class="stack"><span class="h4">platform/</span><div class="tags"><span class="tag teal">Docker Compose</span><span class="tag teal">PostgreSQL</span><span class="tag teal">MariaDB</span><span class="tag teal">Prometheus</span></div></div>
+<button type="button" class="row inline" data-open="projects/chess-teacher"><span class="lbl">See what it serves</span><span class="val">Chess Teacher ›</span></button>
 </div>
 
 <div class="view" data-view="stack" data-path="~/horizon/ravenel-bridge" hidden>
@@ -539,9 +618,9 @@ body.lights-off .dim{opacity:.32}
 <div class="stack"><span class="h4">frontend/</span><div class="tags"><span class="tag amber">HTML</span><span class="tag amber">CSS</span><span class="tag amber">JavaScript</span><span class="tag amber">React</span></div></div>
 </div>
 
-<div class="view" data-view="it" data-path="~/porch/homelab" hidden>
-<div class="prompt"><span class="dollar">$</span> tail ~/homelab/it-experience.log</div>
-<div class="comment"># server's up, switch is blinking: here's what I keep running</div>
+<div class="view" data-view="it" data-path="~/porch/switch" hidden>
+<div class="prompt"><span class="dollar">$</span> tail ~/work/it-experience.log</div>
+<div class="comment"># switch is blinking: here's what I keep running at work</div>
 <div class="entry">
 <span class="when">now</span>
 <span class="role">IT Technician I</span>
@@ -549,13 +628,6 @@ body.lights-off .dim{opacity:.32}
 <span class="pt">› Endpoint protection, firewall configuration and access-control policies across multi-site networks</span>
 <span class="pt">› Mapped and documented existing IT workflows to find inefficiencies and cut operational overhead</span>
 <span class="pt">› Structured troubleshooting across networking, Windows and Linux to keep guest-facing and admin systems up</span>
-</div>
-<div class="entry">
-<span class="when">2024 – 2025</span>
-<span class="role">Account Manager</span>
-<span class="where">Plus Inc · Greenville, SC</span>
-<span class="pt">› Sourced and closed hardware and SaaS deals averaging $252,000 a year, meeting or beating targets</span>
-<span class="pt">› Consulted clients on getting measurable ROI from their hardware and software</span>
 </div>
 <div class="stack"><span class="h4">skills/</span><div class="tags"><span class="tag green">Network administration</span><span class="tag green">Network documentation</span><span class="tag green">PCI-DSS compliance</span><span class="tag green">Firewalls &amp; access control</span><span class="tag green">Endpoint protection</span><span class="tag green">Windows</span><span class="tag green">Linux</span><span class="tag green">Scripting</span></div></div>
 </div>
@@ -580,9 +652,11 @@ body.lights-off .dim{opacity:.32}
 <nav aria-label="Sections">
 <button type="button" class="btn" data-open="projects">Projects</button>
 <button type="button" class="btn" data-open="about">About</button>
-<button type="button" class="btn" data-open="why">Why me</button>
+<button type="button" class="btn" data-open="now">Now</button>
 <button type="button" class="btn" data-open="stack">Stack</button>
 <button type="button" class="btn" data-open="it">IT</button>
+<button type="button" class="btn" data-open="homelab">Homelab</button>
+<button type="button" class="btn" data-open="training">Training</button>
 <button type="button" class="btn" data-open="contact">Contact</button>
 </nav>
 <button type="button" class="btn lights" id="lights" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg><span id="lights-label">String lights on</span></button>
