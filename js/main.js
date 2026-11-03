@@ -20,7 +20,6 @@
     document.body.classList.add('panel-open');
     pathEl.textContent = target.getAttribute('data-path');
     backBtn.hidden = name.indexOf('projects/') !== 0;
-    if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
     panel.scrollTop = 0;
     panel.focus({ preventScroll: true });
   }
@@ -30,7 +29,6 @@
     hint.hidden = false;
     document.body.classList.remove('panel-open');
     views.forEach(function (v) { v.hidden = true; });
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     if (opener && document.contains(opener)) opener.focus({ preventScroll: true });
     opener = null;
   }
@@ -59,8 +57,9 @@
   fitWelcome();
   window.addEventListener('resize', fitWelcome);
 
-  var initial = decodeURIComponent(location.hash.slice(1));
-  if (initial) show(initial);
+  // Every load starts from the bare porch: no open panel, no restored scroll.
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   var lightsBtn = document.getElementById('lights');
   var lightsLabel = document.getElementById('lights-label');
@@ -69,12 +68,9 @@
     lightsBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     lightsLabel.textContent = on ? 'String lights on' : 'String lights off';
   }
-  var saved = null;
-  try { saved = localStorage.getItem('porch.lights'); } catch (e) {}
-  setLights(saved !== 'off');
+  setLights(true);
+  try { localStorage.removeItem('porch.lights'); } catch (e) {}
   lightsBtn.addEventListener('click', function () {
-    var on = document.body.classList.contains('lights-off');
-    setLights(on);
-    try { localStorage.setItem('porch.lights', on ? 'on' : 'off'); } catch (e) {}
+    setLights(document.body.classList.contains('lights-off'));
   });
 })();
