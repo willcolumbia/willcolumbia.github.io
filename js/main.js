@@ -43,10 +43,18 @@
     if (e.key === 'Escape' && !panel.hidden) close();
   });
 
-  // Show the welcome only where the scene leaves real room under it;
-  // on narrow screens it always sits below the scene.
   var stage = document.getElementById('stage');
   var scene = stage.querySelector('.scene');
+
+  // The artwork is inlined (not an <img>) so the page CSS can animate it
+  // and dim it with the lights toggle.
+  fetch('scene/porch.svg?v=2')
+    .then(function (r) { return r.ok ? r.text() : ''; })
+    .then(function (svg) { scene.insertAdjacentHTML('afterbegin', svg); })
+    .catch(function () {});
+
+  // Show the welcome only where the scene leaves real room under it;
+  // on narrow screens it always sits below the scene.
   var welcome = document.getElementById('welcome');
   var narrow = window.matchMedia('(max-width: 760px)');
   function fitWelcome() {
