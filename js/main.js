@@ -33,9 +33,21 @@
     opener = null;
   }
 
+  // Clicking anywhere outside the open panel closes it, except on things
+  // that open another panel or the lights toggle. The press is tracked so a
+  // text selection dragged out of the panel doesn't count as outside.
+  var pressedInPanel = false;
+  document.addEventListener('pointerdown', function (e) {
+    pressedInPanel = panel.contains(e.target);
+  });
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-open]');
-    if (el) show(el.getAttribute('data-open'), el);
+    var startedInside = pressedInPanel;
+    pressedInPanel = false;
+    if (el) return show(el.getAttribute('data-open'), el);
+    if (panel.hidden || startedInside || panel.contains(e.target)) return;
+    if (e.target.closest('#lights')) return;
+    close();
   });
   document.getElementById('panel-close').addEventListener('click', close);
   backBtn.addEventListener('click', function () { show('projects'); });
@@ -48,7 +60,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=2')
+  fetch('scene/porch.svg?v=3')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) { scene.insertAdjacentHTML('afterbegin', svg); })
     .catch(function () {});
