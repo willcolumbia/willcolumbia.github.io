@@ -60,7 +60,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=3')
+  fetch('scene/porch.svg?v=8')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) { scene.insertAdjacentHTML('afterbegin', svg); })
     .catch(function () {});
