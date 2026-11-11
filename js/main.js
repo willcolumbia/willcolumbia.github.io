@@ -62,7 +62,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=28')
+  fetch('scene/porch.svg?v=35')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) {
       scene.insertAdjacentHTML('afterbegin', svg);
@@ -75,6 +75,8 @@
       updateRace();
       loadRunLog();
       startBottle();
+      startFootball();
+      if (previewGameDay) setGameDay(true);
     })
     .catch(function () {});
 
@@ -174,7 +176,7 @@
   // dx/dy = where he slides in from, clip = what's visible (hides him
   // behind the ledge, a post, the desk, the server or the bottom edge).
   var TURKEY_SPOTS = [
-    { x: 500, y: 597, s: 1, f: 1, dx: 0, dy: 66, clip: [0, 0, 1600, 597] },
+    { x: 478, y: 597, s: 1, f: 1, dx: 0, dy: 66, clip: [0, 0, 1600, 597] },
     { x: 1250, y: 597, s: 1, f: -1, dx: 0, dy: 66, clip: [0, 0, 1600, 597] },
     { x: 1484, y: 738, s: 1.1, f: -1, dx: 64, dy: 0, clip: [0, 0, 1506, 900] },
     { x: 118, y: 742, s: 1.1, f: 1, dx: -64, dy: 0, clip: [94, 0, 1506, 900] },
@@ -194,20 +196,35 @@
     var bubble = svg.querySelector('#tk-bubble');
     var tail = svg.querySelector('#tk-tail');
     // He takes turns giving away the porch's easter eggs, with a gobble now and then.
-    var HINTS = ['TYPE GAMECOCKS FOR A SURPRISE!', 'CLICK THE MOON 5 TIMES FAST!', 'CLICK THE MOON TO MAKE IT RAIN',
+    // Each hint can carry a small second line (the Gamecocks one warns about the sound).
+    var HINTS = [['TYPE GAMECOCKS FOR A SURPRISE!', 'HEADS UP: IT PLAYS SOUND'], 'CLICK THE MOON 5 TIMES FAST!', 'CLICK THE MOON TO MAKE IT RAIN',
       'WATCH THE WATER FOR A BOTTLE', 'TRY THE KONAMI CODE!', 'GOBBLE!'];
     var hintAt = 0;
-    function speak(p, text) {
-      say.textContent = text;
-      var w = say.getComputedTextLength ? say.getComputedTextLength() : text.length * 11;
-      var half = w / 2 + 14;
+    var say2 = svg.querySelector('#tk-say2');
+    var note = svg.querySelector('#tk-note');
+    var speaker = svg.querySelector('#tk-speaker');
+    function speak(p, line) {
+      var main = typeof line === 'string' ? line : line[0];
+      var sub = typeof line === 'string' ? '' : line[1];
+      say.textContent = main;
+      say2.textContent = sub;
+      note.style.display = sub ? '' : 'none';
+      var w = say.getComputedTextLength ? say.getComputedTextLength() : main.length * 11;
+      var w2 = sub && say2.getComputedTextLength ? say2.getComputedTextLength() + 22 : 0;
+      var half = Math.max(w, w2) / 2 + 14;
+      var tall = sub ? 16 : 0;
+      if (sub) {
+        say2.setAttribute('x', 11);
+        speaker.setAttribute('transform', 'translate(' + (-w2 / 2).toFixed(1) + ' 18)');
+      }
       var headX = p.x + p.f * 16 * p.s;
       var cx = Math.max(half + 8, Math.min(1592 - half, p.x + p.f * 30 * p.s));
       var tx = Math.max(-half + 14, Math.min(half - 18, headX - cx));
       bubble.setAttribute('x', -half);
       bubble.setAttribute('width', half * 2);
-      tail.setAttribute('points', (tx - 7) + ',12 ' + (tx + 7) + ',12 ' + (tx - 3 * p.f) + ',24');
-      gobble.setAttribute('transform', 'translate(' + cx.toFixed(1) + ' ' + (p.y - 72 * p.s - 22).toFixed(1) + ')');
+      bubble.setAttribute('height', 32 + tall);
+      tail.setAttribute('points', (tx - 7) + ',' + (12 + tall) + ' ' + (tx + 7) + ',' + (12 + tall) + ' ' + (tx - 3 * p.f) + ',' + (24 + tall));
+      gobble.setAttribute('transform', 'translate(' + cx.toFixed(1) + ' ' + (p.y - 72 * p.s - 22 - tall).toFixed(1) + ')');
     }
     var last = -1;
     function away(p) { return 'translate(' + p.dx + 'px,' + p.dy + 'px)'; }
@@ -232,7 +249,7 @@
         });
       });
       var line = HINTS[hintAt++ % HINTS.length];
-      var stay = line === 'GOBBLE!' ? 3200 + Math.random() * 1500 : 5200 + Math.random() * 1200;
+      var stay = line === 'GOBBLE!' ? 3200 + Math.random() * 1500 : (typeof line === 'string' ? 5200 : 6400) + Math.random() * 1200;
       setTimeout(function () { speak(p, line); gobble.setAttribute('opacity', '1'); }, 800);
       setTimeout(function () { gobble.setAttribute('opacity', '0'); }, stay - 300);
       setTimeout(function () {
@@ -276,7 +293,7 @@
     json('https://status.willcolumbia.me/runs.json').then(function (d) {
       if (d.status !== 'ok' && d.status !== 'stale') throw d.status;
       return d;
-    }).catch(function () { return json('data/runs.json?v=28'); }).then(function (d) {
+    }).catch(function () { return json('data/runs.json?v=35'); }).then(function (d) {
       var runs = (d && d.recent) || [];
       list.textContent = '';
       if (!runs.length) {
@@ -457,6 +474,108 @@
     setTimeout(trip, 12000);
   }
 
+  // Game-day TV: ESPN's Top 25 scoreboard, 8 games a page, flipping every
+  // 7 seconds and refreshing every 2 minutes while game day is on.
+  var top25 = [], top25Page = 0, top25Flip = null, top25Fetch = null;
+  function svgEl(tag, attrs, text) {
+    var el = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (text != null) el.textContent = text;
+    return el;
+  }
+  function gameStatus(e) {
+    var type = e.competitions[0].status.type;
+    if (type.state === 'in') return type.shortDetail.toUpperCase();
+    if (type.state === 'post') return type.shortDetail.toUpperCase();
+    return new Date(e.date).toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: '2-digit' })
+      .replace(',', '').toUpperCase();
+  }
+  function drawTop25() {
+    var svg = scene.querySelector('svg');
+    var g = svg && svg.querySelector('#tv-rows');
+    if (!g || !top25.length) return;
+    var pages = Math.ceil(top25.length / 8);
+    top25Page %= pages;
+    svg.querySelector('#tv-page').textContent = (top25Page + 1) + '/' + pages;
+    while (g.firstChild) g.removeChild(g.firstChild);
+    top25.slice(top25Page * 8, top25Page * 8 + 8).forEach(function (e, i) {
+      var c = e.competitions[0];
+      var x = 594 + (i % 2) * 210, y = 476 + Math.floor(i / 2) * 52;
+      var state = c.status.type.state;
+      var teams = c.competitors.slice().sort(function (a, b) { return a.homeAway === 'away' ? -1 : 1; });
+      var ours = teams.some(function (t) { return t.team.id === '2579'; });
+      g.appendChild(svgEl('rect', { x: x, y: y, width: 202, height: 46, rx: 3, fill: ours ? '#5a0008' : '#1c1d23' }));
+      teams.forEach(function (t, k) {
+        var ty = y + 18 + k * 20;
+        var rank = t.curatedRank && t.curatedRank.current < 99 ? t.curatedRank.current : '';
+        var lost = state === 'post' && t.winner === false;
+        g.appendChild(svgEl('text', { x: x + 6, y: ty, 'font-size': 8, fill: '#ffb020' }, rank));
+        g.appendChild(svgEl('text', { x: x + 24, y: ty, 'font-size': 12, fill: lost ? '#8a8a90' : '#f4f1e8' }, t.team.abbreviation));
+        g.appendChild(svgEl('text', { x: x + 128, y: ty, 'text-anchor': 'end', 'font-size': 13, fill: lost ? '#8a8a90' : '#fff' },
+          state === 'pre' ? '' : (t.score && t.score.displayValue != null ? t.score.displayValue : t.score)));
+      });
+      var st = svgEl('text', { x: x + 166, y: y + 28, 'text-anchor': 'middle', 'font-size': 7, fill: state === 'in' ? '#ff5a4a' : '#ffb020' }, gameStatus(e));
+      g.appendChild(st);
+      if (st.getComputedTextLength && st.getComputedTextLength() > 64) {
+        st.setAttribute('textLength', 64);
+        st.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+      }
+    });
+  }
+  function fetchTop25() {
+    getJSON(ESPN + 'scoreboard').then(function (d) {
+      top25 = d.events || [];
+      drawTop25();
+    }).catch(function () {});
+  }
+  function startTop25() {
+    if (top25Fetch) return;
+    fetchTop25();
+    top25Fetch = setInterval(fetchTop25, 120e3);
+    top25Flip = setInterval(function () { top25Page++; drawTop25(); }, 7000);
+  }
+  function stopTop25() {
+    clearInterval(top25Fetch);
+    clearInterval(top25Flip);
+    top25Fetch = top25Flip = null;
+  }
+
+  // Game day only: a football sails past outside the porch every so often, spiraling.
+  function startFootball() {
+    var svg = scene.querySelector('svg');
+    var ball = svg && svg.querySelector('#flyball');
+    if (!ball || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var spin = svg.querySelector('#flyball-spin');
+    function throwBall() {
+      if (!document.body.classList.contains('gameday')) {
+        setTimeout(throwBall, 30000);
+        return;
+      }
+      var ltr = Math.random() < .5;
+      var x0 = ltr ? -40 : 1640, x1 = ltr ? 1640 : -40;
+      var y0 = 520 + Math.random() * 45, y1 = 520 + Math.random() * 45;
+      var peak = 50 + Math.random() * 60;
+      var duration = 2600 + Math.random() * 900;
+      var start = performance.now();
+      ball.style.visibility = 'visible';
+      requestAnimationFrame(function step(now) {
+        var t = (now - start) / duration;
+        if (t >= 1) {
+          ball.style.visibility = 'hidden';
+          setTimeout(throwBall, 35000 + Math.random() * 55000);
+          return;
+        }
+        var x = x0 + (x1 - x0) * t;
+        var y = y0 + (y1 - y0) * t - peak * 4 * t * (1 - t);
+        var angle = Math.atan2((y1 - y0) - peak * 4 * (1 - 2 * t), x1 - x0) * 180 / Math.PI;
+        ball.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + angle.toFixed(1) + ') scale(2)');
+        spin.setAttribute('transform', 'scale(1 ' + (.72 + .28 * Math.cos(now / 45)).toFixed(3) + ')');
+        requestAnimationFrame(step);
+      });
+    }
+    setTimeout(throwBall, 6000);
+  }
+
   // String light colors. Preset 0 is the original warm Edison look; the rest
   // give each bulb its own halo and tint the porch wash to match.
   var PRESETS = [
@@ -512,11 +631,12 @@
     applyPreset();
   }
   swatches.forEach(function (b, k) {
-    b.addEventListener('click', function () { pickPreset(k); });
+    b.addEventListener('click', function () { userPickedLights = true; pickPreset(k); });
     b.addEventListener('keydown', function (e) {
       var d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
       if (!d) return;
       e.preventDefault();
+      userPickedLights = true;
       pickPreset((k + d + swatches.length) % swatches.length, true);
     });
   });
@@ -528,6 +648,22 @@
   var TEAM_PAGE = 'https://www.espn.com/college-football/team/_/id/2579/south-carolina-gamecocks';
   var scoreLink = document.getElementById('score-link');
   var scoreTimer = null;
+
+  // Game day: on the day the Gamecocks play (Eastern time) the porch puts
+  // up bunting and a GAME DAY banner, the laptop becomes a TV showing the
+  // score, the scoreboard glows and the lights go garnet and white (unless
+  // the visitor picked their own). ?gameday previews it any day.
+  var userPickedLights = false, gameDayLights = false;
+  var previewGameDay = /[?&]gameday\b/.test(location.search);
+  function etDate(t) { return new Date(t).toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); }
+  function setGameDay(on) {
+    on = on || previewGameDay;
+    document.body.classList.toggle('gameday', on);
+    document.getElementById('hs-laptop').setAttribute('aria-label', on ? 'Look at the TV: projects' : 'Open the laptop: projects');
+    if (on) startTop25(); else stopTop25();
+    if (on && !userPickedLights && preset === 0) { gameDayLights = true; pickPreset(4); }
+    if (!on && gameDayLights && !userPickedLights) { gameDayLights = false; pickPreset(0); }
+  }
 
   function getJSON(url) {
     return fetch(url).then(function (r) {
@@ -626,27 +762,31 @@
     if (!svg || !svg.querySelector('#scoreboard')) return;
     getJSON(ESPN + 'teams/2579/schedule').then(function (data) {
       var now = Date.now();
-      var live = null, last = null, next = null;
+      var today = etDate(now);
+      var live = null, last = null, next = null, todays = null;
       (data.events || []).slice().sort(function (a, b) {
         return Date.parse(a.date) - Date.parse(b.date);
       }).forEach(function (e) {
         var state = e.competitions[0].status.type.state;
         var t = Date.parse(e.date);
+        if (etDate(t) === today) todays = e;
         if (state === 'in' || (state === 'pre' && t <= now && now - t < 6 * 3600e3)) live = live || e;
         else if (state === 'post') last = e;
         else if (state === 'pre' && !next) next = e;
       });
+      setGameDay(!!(live || todays));
       if (live) {
         return getJSON(ESPN + 'summary?event=' + live.id).then(function (s) {
           renderGame(svg, live.id, s.header.competitions[0]);
           nextScore(60e3);
         });
       }
-      var pick = last || next;
+      var pick = todays || last || next;
       if (pick) renderGame(svg, pick.id, pick.competitions[0]);
       else showBoard(svg, [['SC', '--']], 'Off season', false, TEAM_PAGE, 'off season');
       nextScore(10 * 60e3);
     }).catch(function () {
+      setGameDay(false);
       showBoard(svg, [['SC', '--']], 'No signal', false, TEAM_PAGE, 'score unavailable');
       nextScore(5 * 60e3);
     });

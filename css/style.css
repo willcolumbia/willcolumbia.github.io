@@ -176,6 +176,16 @@ body.xmas-on .xmas{display:inline}
 @keyframes meteorOnce{0%{opacity:0;transform:translate(0,0)}10%{opacity:1}100%{opacity:0;transform:translate(-220px,110px)}}
 .hs[hidden]{display:none}
 #laptop-logo{opacity:0;transition:opacity .35s ease}
+/* game day (ESPN schedule, or ?gameday to preview) */
+.gd{display:none}
+body.gameday .gd{display:inline}
+body.gameday .laptop,body.gameday .garland{display:none}
+/* the Projects hotspot hugs the TV instead of the laptop */
+body.gameday #hs-laptop{left:31.9%!important;top:39%!important;width:36.2%!important;height:40.1%!important}
+.gd-pulse{animation:gdpulse 2.4s ease-in-out infinite}
+@keyframes gdpulse{0%,100%{opacity:.6}50%{opacity:1}}
+#tv-logo{opacity:0;transition:opacity .35s ease}
+body.cheering #tv-logo{opacity:1}
 body.cheering #laptop-logo{opacity:1}
 .runs-list{display:flex;flex-direction:column;gap:10px}
 .kv[hidden]{display:none}

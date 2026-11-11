@@ -142,6 +142,17 @@
 <rect x="0" y="0" width="1600" height="720" fill="url(#pz-rain-near)"/>
 </g>
 
+<!-- game day: a cartoon football spirals past outside now and then, speed lines trailing; js/main.js throws it -->
+<g id="flyball" style="visibility: hidden" transform="translate(-100 -100)">
+<g stroke="#f4f1e8" stroke-opacity=".7" stroke-width="1.4" stroke-linecap="round"><line x1="-18" y1="-4" x2="-30" y2="-4"/><line x1="-19" y1="0" x2="-36" y2="0"/><line x1="-18" y1="4" x2="-28" y2="4"/></g>
+<g id="flyball-spin">
+<path d="M-13 0 Q0 -9 13 0 Q0 9 -13 0Z" fill="#7a4524" stroke="#1a0e06" stroke-width="1.8"/>
+<path d="M-8.5 -4.2 Q-7 0 -8.5 4.2 M8.5 -4.2 Q7 0 8.5 4.2" fill="none" stroke="#f4f1e8" stroke-width="1.6"/>
+<line x1="-5" y1="0" x2="5" y2="0" stroke="#f4f1e8" stroke-width="1.2"/>
+<g stroke="#f4f1e8" stroke-width="1"><line x1="-3" y1="-2" x2="-3" y2="2"/><line x1="0" y1="-2" x2="0" y2="2"/><line x1="3" y1="-2" x2="3" y2="2"/></g>
+</g>
+</g>
+
 <!-- the screen, right up close -->
 <rect x="0" y="34" width="1600" height="684" fill="url(#pz-mesh)"/>
 <rect x="0" y="0" width="1600" height="34" fill="#2a1f16"/>
@@ -186,6 +197,15 @@
 <circle cx="1376" cy="53" r="5" fill="#c9a36a"/><circle cx="1504" cy="53" r="5" fill="#c9a36a"/>
 </g>
 
+<!-- game day: garnet and black bunting along the header and a GAME DAY banner -->
+<g class="gd" font-family="Silkscreen, monospace">
+<g stroke="#f4f1e8" stroke-width="1.2" stroke-opacity=".7"><path d="M0 42 Q200 82 400 42 Q600 82 800 42 Q1000 82 1200 42 Q1400 82 1600 42" fill="none" stroke="#2a1f16" stroke-width="2"/><polygon points="3,45.8 37,45.8 20,75.8" fill="#73000a"/><polygon points="43,52.2 77,52.2 60,82.2" fill="#141414"/><polygon points="83,57 117,57 100,87" fill="#73000a"/><polygon points="123,60.2 157,60.2 140,90.2" fill="#141414"/><polygon points="163,61.8 197,61.8 180,91.8" fill="#73000a"/><polygon points="203,61.8 237,61.8 220,91.8" fill="#141414"/><polygon points="243,60.2 277,60.2 260,90.2" fill="#73000a"/><polygon points="283,57 317,57 300,87" fill="#141414"/><polygon points="323,52.2 357,52.2 340,82.2" fill="#73000a"/><polygon points="363,45.8 397,45.8 380,75.8" fill="#141414"/><polygon points="403,45.8 437,45.8 420,75.8" fill="#73000a"/><polygon points="443,52.2 477,52.2 460,82.2" fill="#141414"/><polygon points="483,57 517,57 500,87" fill="#73000a"/><polygon points="523,60.2 557,60.2 540,90.2" fill="#141414"/><polygon points="563,61.8 597,61.8 580,91.8" fill="#73000a"/><polygon points="603,61.8 637,61.8 620,91.8" fill="#141414"/><polygon points="643,60.2 677,60.2 660,90.2" fill="#73000a"/><polygon points="683,57 717,57 700,87" fill="#141414"/><polygon points="723,52.2 757,52.2 740,82.2" fill="#73000a"/><polygon points="763,45.8 797,45.8 780,75.8" fill="#141414"/><polygon points="803,45.8 837,45.8 820,75.8" fill="#73000a"/><polygon points="843,52.2 877,52.2 860,82.2" fill="#141414"/><polygon points="883,57 917,57 900,87" fill="#73000a"/><polygon points="923,60.2 957,60.2 940,90.2" fill="#141414"/><polygon points="963,61.8 997,61.8 980,91.8" fill="#73000a"/><polygon points="1003,61.8 1037,61.8 1020,91.8" fill="#141414"/><polygon points="1043,60.2 1077,60.2 1060,90.2" fill="#73000a"/><polygon points="1083,57 1117,57 1100,87" fill="#141414"/><polygon points="1123,52.2 1157,52.2 1140,82.2" fill="#73000a"/><polygon points="1163,45.8 1197,45.8 1180,75.8" fill="#141414"/><polygon points="1203,45.8 1237,45.8 1220,75.8" fill="#73000a"/><polygon points="1243,52.2 1277,52.2 1260,82.2" fill="#141414"/><polygon points="1283,57 1317,57 1300,87" fill="#73000a"/><polygon points="1323,60.2 1357,60.2 1340,90.2" fill="#141414"/><polygon points="1363,61.8 1397,61.8 1380,91.8" fill="#73000a"/><polygon points="1403,61.8 1437,61.8 1420,91.8" fill="#141414"/><polygon points="1443,60.2 1477,60.2 1460,90.2" fill="#73000a"/><polygon points="1483,57 1517,57 1500,87" fill="#141414"/><polygon points="1523,52.2 1557,52.2 1540,82.2" fill="#73000a"/><polygon points="1563,45.8 1597,45.8 1580,75.8" fill="#141414"/></g>
+<line x1="690" y1="34" x2="696" y2="132" stroke="#c8a873" stroke-width="1.5"/><line x1="910" y1="34" x2="904" y2="132" stroke="#c8a873" stroke-width="1.5"/>
+<path d="M676 130 H924 V188 L904 180 L884 188 L864 180 L844 188 L824 180 L804 188 L784 180 L764 188 L744 180 L724 188 L704 180 L684 188 L676 184Z" fill="#73000a"/>
+<rect x="676" y="130" width="248" height="5" fill="#4a0006"/>
+<text x="800" y="166" text-anchor="middle" font-size="28" letter-spacing="4" fill="#f4f1e8">GAME DAY</text>
+</g>
+
 <!-- Edison string lights along the screen frame -->
 <path d="M0 34 Q200 138 400 34 Q600 138 800 34 Q1000 138 1200 34 Q1400 138 1600 34" fill="none" stroke="#120d09" stroke-width="2.5"/>
 <g fill="#2b2018"><circle cx="400" cy="34" r="4"/><circle cx="800" cy="34" r="4"/><circle cx="1200" cy="34" r="4"/></g>
@@ -228,6 +248,9 @@
 <rect x="0" y="596" width="1600" height="2" fill="#4a3626"/>
 <rect x="0" y="714" width="1600" height="12" fill="#2a1f16"/>
 
+<!-- game day: garnet glow behind the scoreboard -->
+<g class="gd"><radialGradient id="gd-sbglow"><stop offset="0" stop-color="#ff3b4a" stop-opacity=".38"/><stop offset="1" stop-color="#ff3b4a" stop-opacity="0"/></radialGradient>
+<ellipse class="gd-pulse" cx="217" cy="532" rx="170" ry="110" fill="url(#gd-sbglow)"/></g>
 <!-- Gamecocks scoreboard on the ledge: seven-segment LED box; js/main.js fills in teams, rankings, score and status -->
 <g id="scoreboard" font-family="Silkscreen, monospace">
 <defs><filter id="sb-ledglow" x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
@@ -284,6 +307,7 @@
 <path class="flow" d="M1443 734 C1436 790 1452 880 1410 888 C1370 896 1350 878 1356 858 C1360 846 1352 834 1340 828 C1300 806 1290 770 1250 742 C1220 722 1170 706 1100 706 C1060 706 1030 704 1000 702" fill="none" stroke="#ffd9a3" stroke-opacity=".85" stroke-width="1.6" stroke-linecap="round"/>
 <polygon points="988,697 1006,696 1008,707 990,708" fill="#d8cfbf" fill-opacity=".92"/>
 
+<g class="laptop">
 <rect x="604" y="466" width="392" height="238" rx="10" fill="#171310"/>
 <rect class="screenglow" x="618" y="480" width="364" height="210" fill="#0b1b1e"/>
 <g>
@@ -304,6 +328,20 @@
 <g stroke="#3a342e" stroke-width="8" stroke-dasharray="16 5"><line x1="598" y1="720" x2="1002" y2="720"/><line x1="584" y1="735" x2="1016" y2="735"/></g>
 <polygon points="750,750 850,750 855,762 745,762" fill="#2f2a25"/>
 <polygon points="538,770 1062,770 1057,777 543,777" fill="#14110f"/>
+</g>
+
+<!-- game day: a TV in place of the laptop, paging through the Top 25 scoreboard (js/main.js fills it) -->
+<g class="gd tv" font-family="Silkscreen, monospace" transform="translate(800 711) scale(1.3) translate(-800 -711)">
+<rect x="784" y="696" width="32" height="12" fill="#0d0d0f"/><rect x="720" y="704" width="160" height="7" rx="3" fill="#18181c"/>
+<rect x="578" y="434" width="444" height="266" rx="6" fill="#0d0d0f"/>
+<rect x="588" y="444" width="424" height="244" fill="#0e0f13"/>
+<rect x="588" y="444" width="424" height="26" fill="#73000a"/>
+<text x="598" y="462" font-size="12" letter-spacing="2" fill="#f4f1e8">TOP 25 SCOREBOARD</text>
+<text id="tv-page" x="1002" y="462" text-anchor="end" font-size="10" letter-spacing="1" fill="#ffb020"></text>
+<g id="tv-rows"><text x="800" y="572" text-anchor="middle" font-size="11" letter-spacing="1" fill="#9a8f7c">LOADING SCORES</text></g>
+<image id="tv-logo" href="media/img/gamecocks-laptop.jpg" x="588" y="444" width="424" height="244" preserveAspectRatio="xMidYMid slice"/>
+<path d="M592 448 L700 448 L620 684 L592 684Z" fill="#fff" fill-opacity=".04"/>
+</g>
 
 <circle cx="432" cy="762" r="90" fill="url(#pz-teal)" opacity=".8"/>
 <g transform="translate(431 765) rotate(-1.5) skewX(-14)">
@@ -318,7 +356,7 @@
 </g>
 <g fill="none" stroke="#f2d9a8" stroke-width="2" stroke-linecap="round"><path class="buzz" d="M520 752 q8 9 0 18"/><path class="buzz" d="M530 746 q12 15 0 30" style="animation-delay: .15s"/><path class="buzz" d="M342 758 q-8 9 0 18"/><path class="buzz" d="M332 752 q-12 15 0 30" style="animation-delay: .15s"/></g>
 
-<circle cx="966" cy="490" r="3" fill="#86bf78"/>
+<circle class="laptop" cx="966" cy="490" r="3" fill="#86bf78"/>
 
 <ellipse cx="1166" cy="790" rx="44" ry="7" fill="#000" fill-opacity=".4"/>
 <path d="M1196 734 q28 0 28 22 q0 22 -28 22" fill="none" stroke="#b3a790" stroke-width="8"/>
@@ -395,6 +433,7 @@
 
 <!-- Thanksgiving (November only): fall leaf garland along the header, leaves drifting down, mini pumpkins on the ledge -->
 <g class="autumn">
+<g class="garland">
 <path d="M0 40 Q200 80 400 40 Q600 80 800 40 Q1000 80 1200 40 Q1400 80 1600 40" fill="none" stroke="#5a4127" stroke-width="2"/>
 <g transform="translate(3.4 42.0) rotate(213) scale(1.19659)"><path d="M0 -7 Q6 -2 0 7 Q-6 -2 0 -7Z" fill="#a3381d"/><path d="M0 -6 V8" stroke="#3a1a0a" stroke-opacity=".5" stroke-width=".8"/></g>
 <g transform="translate(23.0 47.8) rotate(161) scale(1.42149)"><path d="M0 -7 Q6 -2 0 7 Q-6 -2 0 -7Z" fill="#e07b24"/><path d="M0 -6 V8" stroke="#3a1a0a" stroke-opacity=".5" stroke-width=".8"/></g>
@@ -467,6 +506,7 @@
 <g><ellipse cx="392" cy="44" rx="9" ry="6" fill="#c8a873"/><ellipse cx="408" cy="44" rx="9" ry="6" fill="#c8a873"/><path d="M400 46 l-4 14 M400 46 l4 14" stroke="#c8a873" stroke-width="3"/><circle cx="400" cy="45" r="3" fill="#a88a58"/></g>
 <g><ellipse cx="792" cy="44" rx="9" ry="6" fill="#c8a873"/><ellipse cx="808" cy="44" rx="9" ry="6" fill="#c8a873"/><path d="M800 46 l-4 14 M800 46 l4 14" stroke="#c8a873" stroke-width="3"/><circle cx="800" cy="45" r="3" fill="#a88a58"/></g>
 <g><ellipse cx="1192" cy="44" rx="9" ry="6" fill="#c8a873"/><ellipse cx="1208" cy="44" rx="9" ry="6" fill="#c8a873"/><path d="M1200 46 l-4 14 M1200 46 l4 14" stroke="#c8a873" stroke-width="3"/><circle cx="1200" cy="45" r="3" fill="#a88a58"/></g>
+</g>
 <g transform="translate(180 0)"><g class="fall" style="animation-delay: -0.8s; animation-duration: 12.0s"><g transform="translate(0.0 60.0) rotate(0) scale(1.6)"><path d="M0 -7 Q6 -2 0 7 Q-6 -2 0 -7Z" fill="#c8461f"/><path d="M0 -6 V8" stroke="#3a1a0a" stroke-opacity=".5" stroke-width=".8"/></g></g></g>
 <g transform="translate(330 0)"><g class="fall" style="animation-delay: -3.9s; animation-duration: 13.7s"><g transform="translate(0.0 60.0) rotate(0) scale(1.6)"><path d="M0 -7 Q6 -2 0 7 Q-6 -2 0 -7Z" fill="#8a2f1a"/><path d="M0 -6 V8" stroke="#3a1a0a" stroke-opacity=".5" stroke-width=".8"/></g></g></g>
 <g transform="translate(520 0)"><g class="fall" style="animation-delay: -4.7s; animation-duration: 9.8s"><g transform="translate(0.0 60.0) rotate(0) scale(1.6)"><path d="M0 -7 Q6 -2 0 7 Q-6 -2 0 -7Z" fill="#8a2f1a"/><path d="M0 -6 V8" stroke="#3a1a0a" stroke-opacity=".5" stroke-width=".8"/></g></g></g>
@@ -510,6 +550,7 @@
 <rect id="tk-bubble" x="-60" y="-19" width="120" height="32" rx="9" fill="#f4f1e8" stroke="#3a2a1e" stroke-opacity=".25" stroke-width="1.5"/>
 <polygon id="tk-tail" points="-8,12 6,12 -10,24" fill="#f4f1e8"/>
 <text id="tk-say" x="0" y="2" text-anchor="middle" font-size="14" letter-spacing="1" fill="#3a2a1e">GOBBLE!</text>
+<g id="tk-note"><path id="tk-speaker" d="M0 -3 h3 l4 -4 v14 l-4 -4 h-3z M10 -3 q3 3 0 6 M12.5 -5.5 q5.5 5.5 0 11" fill="#73000a" stroke="#73000a" stroke-width="1.2" stroke-linejoin="round"/><text id="tk-say2" x="0" y="22" text-anchor="middle" font-size="9" letter-spacing="1" fill="#73000a"></text></g>
 </g>
 </g>
 
