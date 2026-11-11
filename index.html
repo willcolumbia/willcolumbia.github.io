@@ -15,8 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KF12NL5LZW"></script>
-<script src="js/analytics.js?v=8"></script>
-<link rel="stylesheet" href="css/style.css?v=8">
+<script src="js/analytics.js?v=18"></script>
+<link rel="stylesheet" href="css/style.css?v=18">
 </head>
 <body>
 <div class="page">
@@ -32,7 +32,9 @@
 <button class="hs" type="button" data-open="it" aria-label="Check the network switch: IT experience" style="left:89.1%;top:78.2%;width:9.8%;height:4.2%"><span class="hs-label above-right">IT experience</span></button>
 <button class="hs" type="button" data-open="homelab" aria-label="Check the home server: homelab" style="left:90.5%;top:82.4%;width:6.9%;height:16.4%"><span class="hs-label left">Homelab</span></button>
 <button class="hs" type="button" data-open="now" aria-label="Grab the coffee: what I'm working on now" style="left:70.6%;top:72.5%;width:6.5%;height:15.6%"><span class="hs-label below">Now</span></button>
-<button class="hs" type="button" data-open="training" aria-label="Look at the weights and running shoes: training" style="left:1.9%;top:88.9%;width:13.3%;height:10.3%"><span class="hs-label above-left">Training</span></button>
+<button class="hs" type="button" id="weather" aria-pressed="false" aria-label="Look at the moon: make it rain" style="left:62.5%;top:20.5%;width:7.5%;height:14%"><span class="hs-label below">Make it rain</span></button>
+<a class="hs" id="score-link" href="https://www.espn.com/college-football/team/_/id/2579/south-carolina-gamecocks" target="_blank" rel="noopener" aria-label="Gamecocks scoreboard: open on ESPN" style="left:7%;top:52.7%;width:13.1%;height:13.6%"><span class="hs-label above-left">Gamecocks score ↗</span></a>
+<button class="hs" type="button" data-open="training" aria-label="Look at the gym bag and weights: training" style="left:0.2%;top:86.2%;width:15.1%;height:13.2%"><span class="hs-label above-left">Training</span></button>
 
 <div class="hint" id="hint">◂  LOOK AROUND THE PORCH — CLICK WHAT CATCHES YOUR EYE  ▸</div>
 </div>
@@ -294,10 +296,24 @@
 <button type="button" class="btn" data-open="training">Training</button>
 <button type="button" class="btn" data-open="contact">Contact</button>
 </nav>
-<button type="button" class="btn lights" id="lights" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg><span id="lights-label">String lights on</span></button>
+<div class="lightctl">
+<button type="button" class="btn lights" id="lights-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lights-menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg><span>Light control</span><span class="caret" aria-hidden="true">▾</span></button>
+<div class="lights-menu" id="lights-menu" hidden>
+<button type="button" class="lm-toggle" id="lights" role="switch" aria-checked="true"><span id="lights-label">String lights on</span><span class="knob" aria-hidden="true"></span></button>
+<div class="lm-head" id="lm-color">Color</div>
+<div class="swatches" role="radiogroup" aria-labelledby="lm-color">
+<button type="button" role="radio" class="swatch" data-preset="0" aria-checked="true">Warm Edison</button>
+<button type="button" role="radio" class="swatch" data-preset="1" aria-checked="false">Soft white</button>
+<button type="button" role="radio" class="swatch" data-preset="2" aria-checked="false">Vintage multicolor</button>
+<button type="button" role="radio" class="swatch" data-preset="3" aria-checked="false">Sea glass</button>
+<button type="button" role="radio" class="swatch" data-preset="4" aria-checked="false">Garnet &amp; white</button>
+<button type="button" role="radio" class="swatch" data-preset="5" aria-checked="false">Lowcountry sunset</button>
+</div>
+</div>
+</div>
 </footer>
 </div>
 
-<script src="js/main.js?v=8"></script>
+<script src="js/main.js?v=18"></script>
 </body>
 </html>
