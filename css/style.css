@@ -175,6 +175,8 @@ body.xmas-on .xmas{display:inline}
 .meteor-once{opacity:0;animation:meteorOnce 1s linear forwards}
 @keyframes meteorOnce{0%{opacity:0;transform:translate(0,0)}10%{opacity:1}100%{opacity:0;transform:translate(-220px,110px)}}
 .hs[hidden]{display:none}
+#laptop-logo{opacity:0;transition:opacity .35s ease}
+body.cheering #laptop-logo{opacity:1}
 .runs-list{display:flex;flex-direction:column;gap:10px}
 .kv[hidden]{display:none}
 

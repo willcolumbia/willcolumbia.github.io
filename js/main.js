@@ -62,7 +62,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=25')
+  fetch('scene/porch.svg?v=28')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) {
       scene.insertAdjacentHTML('afterbegin', svg);
@@ -190,6 +190,25 @@
     var pos = svg.querySelector('#turkey-pos');
     var clip = svg.querySelector('#tk-clip rect');
     var gobble = svg.querySelector('#turkey-gobble');
+    var say = svg.querySelector('#tk-say');
+    var bubble = svg.querySelector('#tk-bubble');
+    var tail = svg.querySelector('#tk-tail');
+    // He takes turns giving away the porch's easter eggs, with a gobble now and then.
+    var HINTS = ['TYPE GAMECOCKS FOR A SURPRISE!', 'CLICK THE MOON 5 TIMES FAST!', 'CLICK THE MOON TO MAKE IT RAIN',
+      'WATCH THE WATER FOR A BOTTLE', 'TRY THE KONAMI CODE!', 'GOBBLE!'];
+    var hintAt = 0;
+    function speak(p, text) {
+      say.textContent = text;
+      var w = say.getComputedTextLength ? say.getComputedTextLength() : text.length * 11;
+      var half = w / 2 + 14;
+      var headX = p.x + p.f * 16 * p.s;
+      var cx = Math.max(half + 8, Math.min(1592 - half, p.x + p.f * 30 * p.s));
+      var tx = Math.max(-half + 14, Math.min(half - 18, headX - cx));
+      bubble.setAttribute('x', -half);
+      bubble.setAttribute('width', half * 2);
+      tail.setAttribute('points', (tx - 7) + ',12 ' + (tx + 7) + ',12 ' + (tx - 3 * p.f) + ',24');
+      gobble.setAttribute('transform', 'translate(' + cx.toFixed(1) + ' ' + (p.y - 72 * p.s - 22).toFixed(1) + ')');
+    }
     var last = -1;
     function away(p) { return 'translate(' + p.dx + 'px,' + p.dy + 'px)'; }
     function visit() {
@@ -200,7 +219,6 @@
       slide.style.transition = 'none';
       slide.style.transform = away(p);
       pos.setAttribute('transform', 'translate(' + p.x + ' ' + p.y + ') scale(' + (p.f * p.s) + ' ' + p.s + ')');
-      gobble.setAttribute('transform', 'translate(' + (p.x + p.f * 34 * p.s) + ' ' + (p.y - 74 * p.s) + ')');
       gobble.setAttribute('opacity', '0');
       clip.setAttribute('x', p.clip[0]);
       clip.setAttribute('y', p.clip[1]);
@@ -213,11 +231,10 @@
           slide.style.transform = 'translate(0px,0px)';
         });
       });
-      var stay = 3200 + Math.random() * 2600;
-      if (Math.random() < .5) {
-        setTimeout(function () { gobble.setAttribute('opacity', '1'); }, 900);
-        setTimeout(function () { gobble.setAttribute('opacity', '0'); }, stay - 300);
-      }
+      var line = HINTS[hintAt++ % HINTS.length];
+      var stay = line === 'GOBBLE!' ? 3200 + Math.random() * 1500 : 5200 + Math.random() * 1200;
+      setTimeout(function () { speak(p, line); gobble.setAttribute('opacity', '1'); }, 800);
+      setTimeout(function () { gobble.setAttribute('opacity', '0'); }, stay - 300);
       setTimeout(function () {
         slide.style.transition = 'transform .45s ease-in';
         slide.style.transform = away(p);
@@ -259,7 +276,7 @@
     json('https://status.willcolumbia.me/runs.json').then(function (d) {
       if (d.status !== 'ok' && d.status !== 'stale') throw d.status;
       return d;
-    }).catch(function () { return json('data/runs.json?v=25'); }).then(function (d) {
+    }).catch(function () { return json('data/runs.json?v=28'); }).then(function (d) {
       var runs = (d && d.recent) || [];
       list.textContent = '';
       if (!runs.length) {
@@ -293,12 +310,22 @@
   }
 
   // Secret: type "gamecocks" (or the Konami code) and the string lights
-  // chase garnet and black for a few seconds.
+  // chase garnet and black, the laptop shows the Gamecocks logo, and
+  // media/audio/gameday.mp3 plays if that file is there.
   var cheering = false;
+  var cheerAudio = null;
   function goCocks() {
     var svg = scene.querySelector('svg');
     if (!svg || cheering) return;
     cheering = true;
+    document.body.classList.add('cheering');
+    try {
+      cheerAudio = cheerAudio || new Audio('media/audio/gameday.mp3');
+      cheerAudio.currentTime = 0;
+      cheerAudio.volume = .6;
+      var playing = cheerAudio.play();
+      if (playing && playing.catch) playing.catch(function () {});
+    } catch (e) {}
     var defs = svg.querySelector('defs');
     var g = svg.querySelector('#pz-cheer');
     if (!g) {
@@ -330,9 +357,11 @@
     setTimeout(function () {
       clearInterval(timer);
       cheering = false;
+      document.body.classList.remove('cheering');
+      if (cheerAudio) cheerAudio.pause();
       if (board && board.textContent === 'GO COCKS!') board.textContent = boardText;
       applyPreset();
-    }, 6000);
+    }, 9000);
   }
   var KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   var konamiAt = 0, typed = '';
@@ -369,7 +398,7 @@
   var FACTS = [
     'I helped coach Riverside High School to its fifth straight 5A state title in the 2024-25 season.',
     'My home server runs 13 Docker containers, including the chess app you can find under Projects.',
-    'This whole porch is drawn by hand in SVG. There isn\'t a single image file in the scene.',
+    'This whole porch is drawn by hand in SVG, from the string lights down to the floorboards.',
     'I\'m training for the Kiawah Island Half Marathon on December 12.',
     'I managed Greer Event Rentals for four and a half years, before and during college.',
     'I was a computer science teaching assistant at USC for a year and a half.',
