@@ -15,8 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KF12NL5LZW"></script>
-<script src="js/analytics.js?v=18"></script>
-<link rel="stylesheet" href="css/style.css?v=18">
+<script src="js/analytics.js?v=25"></script>
+<link rel="stylesheet" href="css/style.css?v=25">
 </head>
 <body>
 <div class="page">
@@ -33,8 +33,10 @@
 <button class="hs" type="button" data-open="homelab" aria-label="Check the home server: homelab" style="left:90.5%;top:82.4%;width:6.9%;height:16.4%"><span class="hs-label left">Homelab</span></button>
 <button class="hs" type="button" data-open="now" aria-label="Grab the coffee: what I'm working on now" style="left:70.6%;top:72.5%;width:6.5%;height:15.6%"><span class="hs-label below">Now</span></button>
 <button class="hs" type="button" id="weather" aria-pressed="false" aria-label="Look at the moon: make it rain" style="left:62.5%;top:20.5%;width:7.5%;height:14%"><span class="hs-label below">Make it rain</span></button>
+<button class="hs" type="button" data-open="training" aria-label="Race countdown calendar: training" style="left:15.7%;top:17.3%;width:5.2%;height:11.4%"><span class="hs-label below">Race countdown</span></button>
+<button class="hs" type="button" id="bottle-btn" hidden aria-label="Message in a bottle: open the note" style="left:0;top:61.2%;width:2.8%;height:5.2%"><span class="hs-label above-left">Message in a bottle</span></button>
 <a class="hs" id="score-link" href="https://www.espn.com/college-football/team/_/id/2579/south-carolina-gamecocks" target="_blank" rel="noopener" aria-label="Gamecocks scoreboard: open on ESPN" style="left:7%;top:52.7%;width:13.1%;height:13.6%"><span class="hs-label above-left">Gamecocks score ↗</span></a>
-<button class="hs" type="button" data-open="training" aria-label="Look at the gym bag and weights: training" style="left:0.2%;top:86.2%;width:15.1%;height:13.2%"><span class="hs-label above-left">Training</span></button>
+<button class="hs" type="button" data-open="training" aria-label="Look at the gym bag and weights: training and my last 4 runs" style="left:0.2%;top:86.2%;width:15.1%;height:13.2%"><span class="hs-label above-left">Training</span></button>
 
 <div class="hint" id="hint">◂  LOOK AROUND THE PORCH — CLICK WHAT CATCHES YOUR EYE  ▸</div>
 </div>
@@ -130,6 +132,12 @@
 </div>
 </div>
 
+<div class="view" data-view="bottle" data-path="~/ocean/message-in-a-bottle" hidden>
+<div class="prompt"><span class="dollar">$</span> cat note.txt</div>
+<div class="comment"># washed up off the porch</div>
+<p id="bottle-note"></p>
+<button type="button" class="btn" id="bottle-again">Read another</button>
+</div>
 <div class="view" data-view="now" data-path="~/desk/coffee" hidden>
 <div class="prompt"><span class="dollar">$</span> cat now.md</div>
 <div class="comment"># what's brewing · updated Nov 2026</div>
@@ -170,6 +178,12 @@
 <span class="role">Kiawah Island Half Marathon</span>
 <span class="where">13.1 mi · Kiawah Island, SC</span>
 <span class="pt">› In training now, building toward race day</span>
+</div>
+<div class="comment"># last 4 runs · synced from Strava every 30 minutes</div>
+<div id="runs-list" class="runs-list"><p class="subtle">Loading runs...</p></div>
+<div class="kv" id="runs-totals" hidden>
+<span class="k">this week</span><span id="rt-week"></span>
+<span class="k">last 4 weeks</span><span id="rt-month"></span>
 </div>
 <div class="stack"><span class="h4">off-the-clock/</span><div class="tags"><span class="tag amber">Weightlifting</span><span class="tag amber">Running</span><span class="tag amber">Half marathon</span></div></div>
 </div>
@@ -314,6 +328,6 @@
 </footer>
 </div>
 
-<script src="js/main.js?v=18"></script>
+<script src="js/main.js?v=25"></script>
 </body>
 </html>

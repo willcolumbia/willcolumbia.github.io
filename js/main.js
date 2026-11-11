@@ -46,7 +46,7 @@
     pressedInPanel = false;
     if (el) return show(el.getAttribute('data-open'), el);
     if (panel.hidden || startedInside || panel.contains(e.target)) return;
-    if (e.target.closest('.lightctl, #weather')) return;
+    if (e.target.closest('.lightctl, #weather, #bottle-btn')) return;
     close();
   });
   document.getElementById('panel-close').addEventListener('click', close);
@@ -62,7 +62,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=18')
+  fetch('scene/porch.svg?v=25')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) {
       scene.insertAdjacentHTML('afterbegin', svg);
@@ -71,6 +71,10 @@
       if (art && art.pauseAnimations && window.matchMedia('(prefers-reduced-motion: reduce)').matches) art.pauseAnimations();
       applyPreset();
       loadScore();
+      startTurkey();
+      updateRace();
+      loadRunLog();
+      startBottle();
     })
     .catch(function () {});
 
@@ -86,8 +90,11 @@
   fitWelcome();
   window.addEventListener('resize', fitWelcome);
 
-  // Christmas decorations go up for December; ?xmas previews them any time.
-  if (new Date().getMonth() === 11 || /[?&]xmas\b/.test(location.search)) document.body.classList.add('xmas-on');
+  // Thanksgiving garland for November, Christmas lights for December;
+  // ?thanksgiving or ?xmas previews either one any time.
+  var month = new Date().getMonth();
+  if (month === 10 || /[?&]thanksgiving\b/.test(location.search)) document.body.classList.add('autumn-on');
+  if (month === 11 || /[?&]xmas\b/.test(location.search)) document.body.classList.add('xmas-on');
 
   // Every load starts from the bare porch: no open panel, no restored scroll.
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
@@ -136,9 +143,21 @@
     weatherBtn.setAttribute('aria-label', on ? 'Clouds over the moon: clear the sky' : 'Look at the moon: make it rain');
     weatherLabel.textContent = on ? 'Clear the sky' : 'Make it rain';
   }
+  // One click toggles the rain; five quick clicks start a meteor shower instead.
+  var moonClicks = 0, moonTimer = null;
   weatherBtn.addEventListener('click', function () {
-    pickedWeather = true;
-    setRain(!document.body.classList.contains('raining'));
+    moonClicks++;
+    clearTimeout(moonTimer);
+    if (moonClicks >= 5) {
+      moonClicks = 0;
+      meteorShower();
+      return;
+    }
+    moonTimer = setTimeout(function () {
+      moonClicks = 0;
+      pickedWeather = true;
+      setRain(!document.body.classList.contains('raining'));
+    }, 350);
   });
   fetch('https://api.open-meteo.com/v1/forecast?latitude=32.78&longitude=-79.93&current=weather_code')
     .then(function (r) { return r.ok ? r.json() : null; })
@@ -148,6 +167,266 @@
       if (wet && !pickedWeather) setRain(true);
     })
     .catch(function () {});
+
+  // November turkey: pops out from behind something, hangs around a few
+  // seconds, ducks back out of sight and turns up somewhere else.
+  // x/y = where his feet go, s = size, f = facing (1 right, -1 left),
+  // dx/dy = where he slides in from, clip = what's visible (hides him
+  // behind the ledge, a post, the desk, the server or the bottom edge).
+  var TURKEY_SPOTS = [
+    { x: 500, y: 597, s: 1, f: 1, dx: 0, dy: 66, clip: [0, 0, 1600, 597] },
+    { x: 1250, y: 597, s: 1, f: -1, dx: 0, dy: 66, clip: [0, 0, 1600, 597] },
+    { x: 1484, y: 738, s: 1.1, f: -1, dx: 64, dy: 0, clip: [0, 0, 1506, 900] },
+    { x: 118, y: 742, s: 1.1, f: 1, dx: -64, dy: 0, clip: [94, 0, 1506, 900] },
+    { x: 720, y: 930, s: 1.4, f: 1, dx: 0, dy: 100, clip: [0, 0, 1600, 900] },
+    { x: 1426, y: 892, s: 1.1, f: -1, dx: 60, dy: 0, clip: [0, 0, 1448, 900] },
+    { x: 440, y: 694, s: .9, f: 1, dx: 0, dy: 60, clip: [0, 0, 1600, 690] },
+    { x: 1096, y: 694, s: .9, f: -1, dx: 0, dy: 60, clip: [0, 0, 1600, 690] }
+  ];
+  function startTurkey() {
+    var svg = scene.querySelector('svg');
+    var slide = svg && svg.querySelector('#turkey-slide');
+    if (!slide || !document.body.classList.contains('autumn-on')) return;
+    var pos = svg.querySelector('#turkey-pos');
+    var clip = svg.querySelector('#tk-clip rect');
+    var gobble = svg.querySelector('#turkey-gobble');
+    var last = -1;
+    function away(p) { return 'translate(' + p.dx + 'px,' + p.dy + 'px)'; }
+    function visit() {
+      var i;
+      do { i = Math.floor(Math.random() * TURKEY_SPOTS.length); } while (i === last);
+      last = i;
+      var p = TURKEY_SPOTS[i];
+      slide.style.transition = 'none';
+      slide.style.transform = away(p);
+      pos.setAttribute('transform', 'translate(' + p.x + ' ' + p.y + ') scale(' + (p.f * p.s) + ' ' + p.s + ')');
+      gobble.setAttribute('transform', 'translate(' + (p.x + p.f * 34 * p.s) + ' ' + (p.y - 74 * p.s) + ')');
+      gobble.setAttribute('opacity', '0');
+      clip.setAttribute('x', p.clip[0]);
+      clip.setAttribute('y', p.clip[1]);
+      clip.setAttribute('width', p.clip[2]);
+      clip.setAttribute('height', p.clip[3]);
+      slide.style.visibility = 'visible';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          slide.style.transition = 'transform .6s cubic-bezier(.2,.9,.3,1.25)';
+          slide.style.transform = 'translate(0px,0px)';
+        });
+      });
+      var stay = 3200 + Math.random() * 2600;
+      if (Math.random() < .5) {
+        setTimeout(function () { gobble.setAttribute('opacity', '1'); }, 900);
+        setTimeout(function () { gobble.setAttribute('opacity', '0'); }, stay - 300);
+      }
+      setTimeout(function () {
+        slide.style.transition = 'transform .45s ease-in';
+        slide.style.transform = away(p);
+        setTimeout(function () {
+          slide.style.visibility = 'hidden';
+          setTimeout(visit, 4000 + Math.random() * 7000);
+        }, 500);
+      }, stay);
+    }
+    setTimeout(visit, 2500);
+  }
+
+  // Race countdown on the calendar pinned to the screen (by calendar day).
+  var RACE_DAY = Date.UTC(2026, 11, 12);
+  function updateRace() {
+    var svg = scene.querySelector('svg');
+    var big = svg && svg.querySelector('#race-days');
+    if (!big) return;
+    var label = svg.querySelector('#race-label');
+    var t = new Date();
+    var days = Math.round((RACE_DAY - Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
+    big.removeAttribute('textLength');
+    big.setAttribute('font-size', days > 0 ? 34 : 22);
+    if (days > 1) { big.textContent = days; label.textContent = 'DAYS TO GO'; }
+    else if (days === 1) { big.textContent = '1'; label.textContent = 'DAY TO GO'; }
+    else if (days === 0) { big.textContent = 'GO!'; label.textContent = 'RACE DAY'; }
+    else { big.textContent = 'DONE'; label.textContent = 'FINISHED'; }
+  }
+
+  // Run log clipboard: Strava totals synced on the homelab and served at
+  // status.willcolumbia.me/runs.json; data/runs.json is the fallback.
+  // Run log in the Training panel: last 4 runs from Strava, synced on the
+  // homelab and served at status.willcolumbia.me/runs.json (data/runs.json
+  // is the fallback).
+  function loadRunLog() {
+    var list = document.getElementById('runs-list');
+    function json(url) { return fetch(url).then(function (r) { if (!r.ok) throw r.status; return r.json(); }); }
+    function md(iso) { var d = new Date(iso + 'T12:00:00'); return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][d.getDay()] + ' ' + (d.getMonth() + 1) + '/' + d.getDate(); }
+    json('https://status.willcolumbia.me/runs.json').then(function (d) {
+      if (d.status !== 'ok' && d.status !== 'stale') throw d.status;
+      return d;
+    }).catch(function () { return json('data/runs.json?v=25'); }).then(function (d) {
+      var runs = (d && d.recent) || [];
+      list.textContent = '';
+      if (!runs.length) {
+        var none = document.createElement('p');
+        none.className = 'subtle';
+        none.textContent = 'No runs synced yet.';
+        list.appendChild(none);
+      }
+      runs.forEach(function (run) {
+        var e = document.createElement('div');
+        e.className = 'entry';
+        [['when', md(run.date)],
+         ['role', (+run.mi).toFixed(1) + ' mi'],
+         ['where', [run.pace && run.pace + ' /mi', run.time, run.elev_ft != null && run.elev_ft + ' ft climb'].filter(Boolean).join(' \u00b7 ')]
+        ].forEach(function (part) {
+          var span = document.createElement('span');
+          span.className = part[0];
+          span.textContent = part[1];
+          e.appendChild(span);
+        });
+        list.appendChild(e);
+      });
+      if (d && d.week_mi != null) {
+        document.getElementById('rt-week').textContent = d.week_mi.toFixed(1) + ' mi';
+        document.getElementById('rt-month').textContent = d.four_week_mi.toFixed(1) + ' mi over ' + d.runs_4wk + ' runs';
+        document.getElementById('runs-totals').hidden = false;
+      }
+    }).catch(function () {
+      list.textContent = 'Couldn\'t reach the run log right now.';
+    });
+  }
+
+  // Secret: type "gamecocks" (or the Konami code) and the string lights
+  // chase garnet and black for a few seconds.
+  var cheering = false;
+  function goCocks() {
+    var svg = scene.querySelector('svg');
+    if (!svg || cheering) return;
+    cheering = true;
+    var defs = svg.querySelector('defs');
+    var g = svg.querySelector('#pz-cheer');
+    if (!g) {
+      g = document.createElementNS(SVGNS, 'radialGradient');
+      g.setAttribute('id', 'pz-cheer');
+      [[0, .55], [.45, .2], [1, 0]].forEach(function (o) {
+        var st = document.createElementNS(SVGNS, 'stop');
+        st.setAttribute('offset', o[0]);
+        st.setAttribute('stop-opacity', o[1]);
+        st.setAttribute('stop-color', '#ff2b3b');
+        g.appendChild(st);
+      });
+      defs.appendChild(g);
+    }
+    svg.querySelectorAll('#pz-warm stop').forEach(function (st) { st.setAttribute('stop-color', '#c41e3a'); });
+    var lanterns = svg.querySelectorAll('.lantern');
+    var board = svg.querySelector('#sb-st');
+    var boardText = board ? board.textContent : '';
+    if (board) board.textContent = 'GO COCKS!';
+    var frame = 0;
+    var timer = setInterval(function () {
+      lanterns.forEach(function (l, n) {
+        var on = (n + frame) % 2 === 0;
+        l.querySelector('circle').setAttribute('fill', on ? 'url(#pz-cheer)' : 'none');
+        l.querySelector('ellipse').setAttribute('fill', on ? '#ff2b3b' : '#1a1414');
+      });
+      frame++;
+    }, 320);
+    setTimeout(function () {
+      clearInterval(timer);
+      cheering = false;
+      if (board && board.textContent === 'GO COCKS!') board.textContent = boardText;
+      applyPreset();
+    }, 6000);
+  }
+  var KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  var konamiAt = 0, typed = '';
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+    var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    konamiAt = k === KONAMI[konamiAt] ? konamiAt + 1 : (k === KONAMI[0] ? 1 : 0);
+    if (konamiAt === KONAMI.length) { konamiAt = 0; goCocks(); }
+    if (k.length === 1) {
+      typed = (typed + k).slice(-9);
+      if (typed === 'gamecocks') { typed = ''; goCocks(); }
+    }
+  });
+
+  // Secret: five quick clicks on the moon set off a meteor shower.
+  var showerTimer = null;
+  function meteorShower() {
+    var svg = scene.querySelector('svg');
+    var g = svg && svg.querySelector('#meteor-shower');
+    if (!g) return;
+    if (document.body.classList.contains('raining')) setRain(false);
+    var html = '';
+    for (var i = 0; i < 28; i++) {
+      html += '<g transform="translate(' + Math.round(200 + Math.random() * 1350) + ' ' + Math.round(20 + Math.random() * 260) + ')">' +
+        '<g class="meteor-once" style="animation-delay:' + (Math.random() * 4.5).toFixed(2) + 's;animation-duration:' + (.8 + Math.random() * .6).toFixed(2) + 's">' +
+        '<path d="M0 0 l90 -45" stroke="url(#pz-meteor)" stroke-width="1.6" stroke-linecap="round"/><circle r="1.6" fill="#fff"/></g></g>';
+    }
+    g.innerHTML = html;
+    clearTimeout(showerTimer);
+    showerTimer = setTimeout(function () { g.innerHTML = ''; }, 7000);
+  }
+
+  // Secret: a message in a bottle drifts past now and then. Click it for a note.
+  var FACTS = [
+    'I helped coach Riverside High School to its fifth straight 5A state title in the 2024-25 season.',
+    'My home server runs 13 Docker containers, including the chess app you can find under Projects.',
+    'This whole porch is drawn by hand in SVG. There isn\'t a single image file in the scene.',
+    'I\'m training for the Kiawah Island Half Marathon on December 12.',
+    'I managed Greer Event Rentals for four and a half years, before and during college.',
+    'I was a computer science teaching assistant at USC for a year and a half.',
+    'My chess app lets you play against the Stockfish engine and learn standard openings.',
+    'When I\'m not working, you\'ll probably find me at a Gamecock football game or on a golf course.',
+    'The scoreboard on the ledge pulls the real Gamecocks score, live on game days.'
+  ];
+  var lastFact = -1;
+  var bottleBtn = document.getElementById('bottle-btn');
+  var bottleNote = document.getElementById('bottle-note');
+  function readBottle() {
+    var i;
+    do { i = Math.floor(Math.random() * FACTS.length); } while (i === lastFact);
+    lastFact = i;
+    bottleNote.textContent = FACTS[i];
+  }
+  bottleBtn.addEventListener('click', function () {
+    readBottle();
+    show('bottle', bottleBtn);
+  });
+  document.getElementById('bottle-again').addEventListener('click', readBottle);
+  function placeBottle(b, x, y) {
+    b.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')');
+    bottleBtn.style.left = ((x - 22) / 16) + '%';
+    bottleBtn.style.top = ((y - 23) / 9) + '%';
+  }
+  function startBottle() {
+    var svg = scene.querySelector('svg');
+    var b = svg && svg.querySelector('#bottle');
+    if (!b) return;
+    b.style.visibility = 'visible';
+    bottleBtn.hidden = false;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      placeBottle(b, 1090, 578);
+      return;
+    }
+    b.style.visibility = 'hidden';
+    bottleBtn.hidden = true;
+    function trip() {
+      var start = performance.now();
+      var duration = 45000;
+      b.style.visibility = 'visible';
+      bottleBtn.hidden = false;
+      requestAnimationFrame(function step(now) {
+        var t = (now - start) / duration;
+        if (t >= 1) {
+          b.style.visibility = 'hidden';
+          bottleBtn.hidden = true;
+          setTimeout(trip, 40000 + Math.random() * 50000);
+          return;
+        }
+        placeBottle(b, 1660 - t * 1760, 577 + Math.sin(now / 600) * 2.5);
+        requestAnimationFrame(step);
+      });
+    }
+    setTimeout(trip, 12000);
+  }
 
   // String light colors. Preset 0 is the original warm Edison look; the rest
   // give each bulb its own halo and tint the porch wash to match.

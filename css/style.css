@@ -153,6 +153,16 @@ body.lights-off .dim{opacity:.32}
 .swatch[data-preset="5"]{--sw:conic-gradient(#ff9a6b 0 33%,#ff7fa8 0 66%,#ffc46b 0)}
 #sb-live.on{opacity:1;animation:blink 1.2s steps(1) infinite}
 
+/* Thanksgiving leaf garland and falling leaves: November only (or ?thanksgiving to preview) */
+.autumn{display:none}
+body.autumn-on .autumn{display:inline}
+.fall{transform-box:fill-box;transform-origin:center;opacity:0;animation:fall 11s linear infinite}
+@keyframes fall{0%{opacity:0;transform:translate(0,0) rotate(0)}8%{opacity:1}50%{transform:translate(34px,330px) rotate(200deg)}92%{opacity:1}100%{opacity:0;transform:translate(-14px,640px) rotate(380deg)}}
+
+.tk-head{transform-box:fill-box;transform-origin:30% 100%;animation:tkbob 1.3s ease-in-out infinite}
+#turkey-gobble{transition:opacity .25s ease}
+@keyframes tkbob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(7deg)}}
+
 /* Christmas lights on the palmetto, bridge and ship: December only (or ?xmas to preview) */
 .xmas{display:none}
 body.xmas-on .xmas{display:inline}
@@ -160,6 +170,13 @@ body.xmas-on .xmas{display:inline}
 .tw1{animation-delay:-.9s}
 .tw2{animation-delay:-1.7s}
 @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* secrets: meteor shower (five clicks on the moon), bottle button */
+.meteor-once{opacity:0;animation:meteorOnce 1s linear forwards}
+@keyframes meteorOnce{0%{opacity:0;transform:translate(0,0)}10%{opacity:1}100%{opacity:0;transform:translate(-220px,110px)}}
+.hs[hidden]{display:none}
+.runs-list{display:flex;flex-direction:column;gap:10px}
+.kv[hidden]{display:none}
 
 /* rain mode: click the moon, or it turns on when it's raining in Charleston */
 .rain{opacity:0;visibility:hidden;transition:opacity 1.2s ease,visibility 0s linear 1.2s}
