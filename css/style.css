@@ -187,6 +187,10 @@ body.gameday #hs-laptop{left:31.9%!important;top:39%!important;width:36.2%!impor
 #tv-logo{opacity:0;transition:opacity .35s ease}
 body.cheering #tv-logo{opacity:1}
 body.cheering #laptop-logo{opacity:1}
+/* the turkey pops up over the laptop (or TV) with a rally towel while the Gamecocks secret runs; the roaming one steps aside */
+#rally-slide{transform:translate(0px,200px);visibility:hidden;transition:transform .45s ease-in,visibility 0s linear .45s}
+body.cheering #rally-slide{transform:translate(0px,0px);visibility:visible;transition:transform .6s cubic-bezier(.2,.9,.3,1.25)}
+body.cheering #turkey-slide,body.cheering #turkey-gobble{visibility:hidden!important}
 .runs-list{display:flex;flex-direction:column;gap:10px}
 .kv[hidden]{display:none}
 

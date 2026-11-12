@@ -62,7 +62,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=35')
+  fetch('scene/porch.svg?v=37')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) {
       scene.insertAdjacentHTML('afterbegin', svg);
@@ -293,7 +293,7 @@
     json('https://status.willcolumbia.me/runs.json').then(function (d) {
       if (d.status !== 'ok' && d.status !== 'stale') throw d.status;
       return d;
-    }).catch(function () { return json('data/runs.json?v=35'); }).then(function (d) {
+    }).catch(function () { return json('data/runs.json?v=37'); }).then(function (d) {
       var runs = (d && d.recent) || [];
       list.textContent = '';
       if (!runs.length) {
@@ -326,15 +326,23 @@
     });
   }
 
-  // Secret: type "gamecocks" (or the Konami code) and the string lights
-  // chase garnet and black, the laptop shows the Gamecocks logo, and
-  // media/audio/gameday.mp3 plays if that file is there.
+  // Secret: type "gamecock" (or the Konami code) and the string lights
+  // chase garnet and black, the laptop shows the Gamecocks logo, the turkey
+  // pops up over it waving a rally towel, and media/audio/gameday.mp3 plays
+  // if that file is there.
   var cheering = false;
   var cheerAudio = null;
   function goCocks() {
     var svg = scene.querySelector('svg');
     if (!svg || cheering) return;
     cheering = true;
+    // Feet go just behind the top edge of the laptop, or of the TV on game day.
+    var edge = document.body.classList.contains('gameday') ? 351 : 466;
+    var rally = svg.querySelector('#rally-pos');
+    if (rally) {
+      rally.setAttribute('transform', 'translate(830 ' + (edge + 20) + ') scale(1.7)');
+      svg.querySelector('#rally-clip-rect').setAttribute('height', edge);
+    }
     document.body.classList.add('cheering');
     try {
       cheerAudio = cheerAudio || new Audio('media/audio/gameday.mp3');
@@ -388,8 +396,8 @@
     konamiAt = k === KONAMI[konamiAt] ? konamiAt + 1 : (k === KONAMI[0] ? 1 : 0);
     if (konamiAt === KONAMI.length) { konamiAt = 0; goCocks(); }
     if (k.length === 1) {
-      typed = (typed + k).slice(-9);
-      if (typed === 'gamecocks') { typed = ''; goCocks(); }
+      typed = (typed + k).slice(-8);
+      if (typed === 'gamecock') { typed = ''; goCocks(); }
     }
   });
 

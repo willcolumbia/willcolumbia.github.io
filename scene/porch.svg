@@ -527,6 +527,7 @@
 <g clip-path="url(#tk-clip)">
 <g id="turkey-slide" style="visibility: hidden">
 <g id="turkey-pos" transform="translate(-200 -200)">
+<g id="tk-body">
 <ellipse cx="2" cy="0" rx="18" ry="3" fill="#000" fill-opacity=".35"/>
 <ellipse cx="-22.4" cy="-32.4" rx="6" ry="17" fill="#6b3a1e" transform="rotate(-75.0 -22.4 -32.4)"/><circle cx="-35.0" cy="-35.8" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="-20.1" cy="-37.4" rx="6" ry="17" fill="#c9663a" transform="rotate(-56.2 -20.1 -37.4)"/><circle cx="-30.9" cy="-44.7" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="-16.3" cy="-41.5" rx="6" ry="17" fill="#e8a32a" transform="rotate(-37.5 -16.3 -41.5)"/><circle cx="-24.3" cy="-51.8" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="-11.5" cy="-44.1" rx="6" ry="17" fill="#b8322a" transform="rotate(-18.8 -11.5 -44.1)"/><circle cx="-15.6" cy="-56.4" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="-6.0" cy="-45.0" rx="6" ry="17" fill="#8a3f22" transform="rotate(0.0 -6.0 -45.0)"/><circle cx="-6.0" cy="-58.0" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="-0.5" cy="-44.1" rx="6" ry="17" fill="#e07b24" transform="rotate(18.8 -0.5 -44.1)"/><circle cx="3.6" cy="-56.4" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="4.3" cy="-41.5" rx="6" ry="17" fill="#6b3a1e" transform="rotate(37.5 4.3 -41.5)"/><circle cx="12.3" cy="-51.8" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="8.1" cy="-37.4" rx="6" ry="17" fill="#d9a62b" transform="rotate(56.2 8.1 -37.4)"/><circle cx="18.9" cy="-44.7" r="2" fill="#f2e3c4" fill-opacity=".55"/><ellipse cx="10.4" cy="-32.4" rx="6" ry="17" fill="#b8322a" transform="rotate(75.0 10.4 -32.4)"/><circle cx="23.0" cy="-35.8" r="2" fill="#f2e3c4" fill-opacity=".55"/>
 <g stroke="#e8a32a" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M-2 -8 L-3 0 M-6 0 H1"/><path d="M7 -8 L8 0 M5 0 H12"/></g>
@@ -545,12 +546,38 @@
 </g>
 </g>
 </g>
+</g>
 <!-- the turkey's speech bubble: js/main.js sets the hint, sizes it and points the tail at him -->
 <g id="turkey-gobble" opacity="0" font-family="Silkscreen, monospace">
 <rect id="tk-bubble" x="-60" y="-19" width="120" height="32" rx="9" fill="#f4f1e8" stroke="#3a2a1e" stroke-opacity=".25" stroke-width="1.5"/>
 <polygon id="tk-tail" points="-8,12 6,12 -10,24" fill="#f4f1e8"/>
 <text id="tk-say" x="0" y="2" text-anchor="middle" font-size="14" letter-spacing="1" fill="#3a2a1e">GOBBLE!</text>
 <g id="tk-note"><path id="tk-speaker" d="M0 -3 h3 l4 -4 v14 l-4 -4 h-3z M10 -3 q3 3 0 6 M12.5 -5.5 q5.5 5.5 0 11" fill="#73000a" stroke="#73000a" stroke-width="1.2" stroke-linejoin="round"/><text id="tk-say2" x="0" y="22" text-anchor="middle" font-size="9" letter-spacing="1" fill="#73000a"></text></g>
+</g>
+</g>
+
+<!-- secret: typing "gamecock" pops the turkey up over the laptop (or the game-day TV), twirling a white rally towel overhead; js/main.js sets where his feet go -->
+<clipPath id="rally-clip"><rect id="rally-clip-rect" x="0" y="0" width="1600" height="466"/></clipPath>
+<g clip-path="url(#rally-clip)">
+<g id="rally-slide">
+<g id="rally-pos" transform="translate(830 486) scale(1.7)">
+<use href="#tk-body"/>
+<g>
+<animateTransform attributeName="transform" type="rotate" values="-8 4 -28;6 4 -28;-8 4 -28" dur=".8s" repeatCount="indefinite"/>
+<path d="M4 -28 Q12 -50 18 -68" fill="none" stroke="#5a3a22" stroke-width="6" stroke-linecap="round"/>
+<!-- the towel spins around his hand; squashed vertically so the circle reads as a twirl overhead -->
+<g transform="translate(18 -70) scale(1 .5)">
+<g>
+<animateTransform attributeName="transform" type="rotate" values="0;-360" dur=".8s" repeatCount="indefinite"/>
+<path d="M0 -10 Q12 -16 22 -12 T42 -12 L42 10 Q32 6 22 10 T0 10 Z" fill="#f4f1e8" stroke="#bdb39c" stroke-width="1">
+<animate attributeName="d" values="M0 -10 Q12 -16 22 -12 T42 -12 L42 10 Q32 6 22 10 T0 10 Z;M0 -10 Q12 -6 22 -10 T42 -8 L42 14 Q32 18 22 12 T0 10 Z;M0 -10 Q12 -16 22 -12 T42 -12 L42 10 Q32 6 22 10 T0 10 Z" dur=".4s" repeatCount="indefinite"/>
+</path>
+<text x="22" y="2.4" text-anchor="middle" font-family="Silkscreen, monospace" font-size="6.5" letter-spacing=".4" fill="#73000a">GO COCKS</text>
+</g>
+</g>
+<circle cx="18" cy="-69" r="3.4" fill="#5a3a22"/>
+</g>
+</g>
 </g>
 </g>
 
