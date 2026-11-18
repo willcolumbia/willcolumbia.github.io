@@ -194,16 +194,40 @@ body.cheering #turkey-slide,body.cheering #turkey-gobble{visibility:hidden!impor
 .runs-list{display:flex;flex-direction:column;gap:10px}
 .kv[hidden]{display:none}
 
-/* rain mode: click the moon, or it turns on when it's raining in Charleston */
-.rain{opacity:0;visibility:hidden;transition:opacity 1.2s ease,visibility 0s linear 1.2s}
-body.raining .rain{opacity:1;visibility:visible;transition:opacity 1.2s ease}
-body.raining .firefly,body.raining .meteor,body.raining .shimmer{visibility:hidden}
-.lightning{opacity:0;animation:lightning 17s linear infinite}
-.ripple{opacity:0;transform-box:fill-box;transform-origin:center;animation:ripple 1.8s ease-out infinite}
-.drip{opacity:0;animation:drip 6s ease-in infinite}
-@keyframes lightning{0%,90%{opacity:0}90.6%{opacity:.32}91.2%{opacity:0}92%{opacity:.5}93.5%,100%{opacity:0}}
-@keyframes ripple{0%{opacity:.7;transform:scale(.2)}100%{opacity:0;transform:scale(1)}}
-@keyframes drip{0%{opacity:0;transform:translateY(0)}10%{opacity:1}85%{opacity:.8}100%{opacity:0;transform:translateY(150px)}}
+/* sunset (click the moon; ?sunset starts there): warm sky and water, the sun in place of the moon, softer vignette */
+.dusk{opacity:0;visibility:hidden;transition:opacity 2.6s ease .5s,visibility 0s linear 3.1s}
+body.sunset .dusk{opacity:1;visibility:visible;transition:opacity 2.6s ease .5s,visibility 0s}
+.stars,.moonshine,.vig{transition:opacity 2.4s ease .4s}
+body.sunset .stars,body.sunset .moonshine{opacity:0}
+body.sunset .meteor,body.sunset .firefly{display:none}
+body.sunset .vig{opacity:.45}
+/* the click box follows the sun only once it has arrived, and steps aside while the sky is changing */
+body.sun-up #weather{top:43.5%!important;height:9.5%!important}
+body.sky-moving #weather{visibility:hidden}
+
+/* northern lights: at Christmas, clicking the moon brings them out for a while */
+#aurora{opacity:0;visibility:hidden;mix-blend-mode:screen;transition:opacity 2s ease,visibility 0s linear 2s}
+body.aurora #aurora{opacity:1;visibility:visible;transition:opacity 2s ease}
+.aur{transform-box:fill-box;transform-origin:50% 100%;animation:aur 7s ease-in-out infinite alternate}
+.aur2{animation-duration:9s;animation-delay:-3s}
+.aur3{animation-duration:11s;animation-delay:-6s}
+@keyframes aur{0%{transform:translateX(-40px) scaleY(.85) skewX(-6deg);opacity:.55}50%{opacity:1}100%{transform:translateX(40px) scaleY(1.15) skewX(6deg);opacity:.7}}
+
+/* snow mode: at Christmas it always snows */
+.snow{opacity:0;visibility:hidden;transition:opacity 1.2s ease,visibility 0s linear 1.2s}
+body.snowing .snow{opacity:1;visibility:visible;transition:opacity 1.2s ease}
+body.snowing .firefly,body.snowing .meteor{visibility:hidden}
+/* at Christmas the porch lights are Christmas lights, so the color choices step aside */
+body.xmas-on .lm-head,body.xmas-on .swatches{display:none}
+/* the pop-up character: the turkey in November, an elf at Christmas (he gives the hints and does the rally towel) */
+.popup{display:none}
+body.autumn-on .popup,body.xmas-on .popup{display:inline}
+#elf-body,#elf-rally{display:none}
+body.xmas-on #elf-body,body.xmas-on #elf-rally{display:inline}
+body.xmas-on #tk-body,body.xmas-on .tk-use{display:none}
+.elf-arm{display:none}
+body.xmas-on .elf-arm{display:inline}
+body.xmas-on .tk-arm{display:none}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:760px){

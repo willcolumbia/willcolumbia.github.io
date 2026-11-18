@@ -62,7 +62,7 @@
 
   // The artwork is inlined (not an <img>) so the page CSS can animate it
   // and dim it with the lights toggle.
-  fetch('scene/porch.svg?v=37')
+  fetch('scene/porch.svg?v=48')
     .then(function (r) { return r.ok ? r.text() : ''; })
     .then(function (svg) {
       scene.insertAdjacentHTML('afterbegin', svg);
@@ -76,6 +76,8 @@
       loadRunLog();
       startBottle();
       startFootball();
+      startSanta();
+      if (!xmasOn) setSunset(document.body.classList.contains('sunset'), true);
       if (previewGameDay) setGameDay(true);
     })
     .catch(function () {});
@@ -95,8 +97,10 @@
   // Thanksgiving garland for November, Christmas lights for December;
   // ?thanksgiving or ?xmas previews either one any time.
   var month = new Date().getMonth();
-  if (month === 10 || /[?&]thanksgiving\b/.test(location.search)) document.body.classList.add('autumn-on');
-  if (month === 11 || /[?&]xmas\b/.test(location.search)) document.body.classList.add('xmas-on');
+  // Christmas wins: when it's on, none of the Thanksgiving pieces show.
+  var xmasOn = month === 11 || /[?&]xmas\b/.test(location.search);
+  if (xmasOn) document.body.classList.add('xmas-on');
+  else if (month === 10 || /[?&]thanksgiving\b/.test(location.search)) document.body.classList.add('autumn-on');
 
   // Every load starts from the bare porch: no open panel, no restored scroll.
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
@@ -134,20 +138,67 @@
     setLights(document.body.classList.contains('lights-off'));
   });
 
-  // Rain mode: the moon toggles it, and it comes on by itself when it's
-  // actually raining in Charleston (unless the visitor already chose).
+  // Time of day: a click on the moon switches to sunset, and a click on the
+  // sun switches back to night. ?sunset starts the page at sunset.
   var weatherBtn = document.getElementById('weather');
   var weatherLabel = weatherBtn.querySelector('.hs-label');
-  var pickedWeather = false;
-  function setRain(on) {
-    document.body.classList.toggle('raining', on);
-    weatherBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    weatherBtn.setAttribute('aria-label', on ? 'Clouds over the moon: clear the sky' : 'Look at the moon: make it rain');
-    weatherLabel.textContent = on ? 'Clear the sky' : 'Make it rain';
+  // The swap is staged: the outgoing body sinks below the water, the sky
+  // fades over, then the incoming one comes down from the top to its spot.
+  var moonEl = null, sunEl = null, skyTimer = null;
+  function place(el, y, how) {
+    if (!el) return;
+    el.style.transition = how || 'none';
+    el.style.transform = 'translateY(' + y + 'px)';
   }
-  // One click toggles the rain; five quick clicks start a meteor shower instead.
+  function setSunset(on, instant) {
+    var svg = scene.querySelector('svg');
+    moonEl = moonEl || (svg && svg.querySelector('#moon'));
+    sunEl = sunEl || (svg && svg.querySelector('#sun'));
+    var leaving = on ? moonEl : sunEl, coming = on ? sunEl : moonEl;
+    clearTimeout(skyTimer);
+    var body = document.body;
+    if (instant || !leaving || !coming) {
+      place(leaving, on ? 300 : -720);
+      place(coming, 0);
+      body.classList.remove('sky-moving');
+      body.classList.toggle('sun-up', on);
+    } else {
+      place(leaving, on ? 300 : 160, 'transform 1.9s cubic-bezier(.5,0,.75,.4)');
+      place(coming, -720);
+      coming.getBoundingClientRect();
+      place(coming, 0, 'transform 2.6s cubic-bezier(.2,.75,.3,1) 1.4s');
+      // Hide the click box until the incoming sun or moon has settled, then put it on top of it.
+      body.classList.add('sky-moving');
+      skyTimer = setTimeout(function () {
+        body.classList.toggle('sun-up', on);
+        body.classList.remove('sky-moving');
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 4000);
+    }
+    document.body.classList.toggle('sunset', on);
+    weatherBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    weatherBtn.setAttribute('aria-label', on ? 'Look at the sun: back to night' : 'Look at the moon: switch to sunset');
+    weatherLabel.textContent = on ? 'Back to night' : 'Watch the sunset';
+  }
+  if (!xmasOn && /[?&]sunset\b/.test(location.search)) document.body.classList.add('sunset');
+  // At Christmas it always snows, whatever the real weather is doing.
+  if (xmasOn) {
+    document.body.classList.add('snowing');
+    weatherBtn.removeAttribute('aria-pressed');
+    weatherBtn.setAttribute('aria-label', 'Look at the moon: bring out the northern lights');
+    weatherLabel.textContent = 'Northern lights';
+  }
+  // Christmas: a click on the moon brings out the northern lights for a while.
+  var auroraTimer = null;
+  function northernLights() {
+    document.body.classList.add('aurora');
+    clearTimeout(auroraTimer);
+    auroraTimer = setTimeout(function () { document.body.classList.remove('aurora'); }, 12000);
+  }
+  // One click switches the time of day (northern lights at Christmas);
+  // five quick clicks start a meteor shower instead.
   var moonClicks = 0, moonTimer = null;
   weatherBtn.addEventListener('click', function () {
+    if (document.body.classList.contains('sky-moving')) return;
     moonClicks++;
     clearTimeout(moonTimer);
     if (moonClicks >= 5) {
@@ -157,18 +208,10 @@
     }
     moonTimer = setTimeout(function () {
       moonClicks = 0;
-      pickedWeather = true;
-      setRain(!document.body.classList.contains('raining'));
+      if (xmasOn) return northernLights();
+      setSunset(!document.body.classList.contains('sunset'));
     }, 350);
   });
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=32.78&longitude=-79.93&current=weather_code')
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (d) {
-      var code = d && d.current ? d.current.weather_code : -1;
-      var wet = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95;
-      if (wet && !pickedWeather) setRain(true);
-    })
-    .catch(function () {});
 
   // November turkey: pops out from behind something, hangs around a few
   // seconds, ducks back out of sight and turns up somewhere else.
@@ -188,7 +231,7 @@
   function startTurkey() {
     var svg = scene.querySelector('svg');
     var slide = svg && svg.querySelector('#turkey-slide');
-    if (!slide || !document.body.classList.contains('autumn-on')) return;
+    if (!slide || !(xmasOn || document.body.classList.contains('autumn-on'))) return;
     var pos = svg.querySelector('#turkey-pos');
     var clip = svg.querySelector('#tk-clip rect');
     var gobble = svg.querySelector('#turkey-gobble');
@@ -197,8 +240,16 @@
     var tail = svg.querySelector('#tk-tail');
     // He takes turns giving away the porch's easter eggs, with a gobble now and then.
     // Each hint can carry a small second line (the Gamecocks one warns about the sound).
-    var HINTS = [['TYPE GAMECOCKS FOR A SURPRISE!', 'HEADS UP: IT PLAYS SOUND'], 'CLICK THE MOON 5 TIMES FAST!', 'CLICK THE MOON TO MAKE IT RAIN',
-      'WATCH THE WATER FOR A BOTTLE', 'TRY THE KONAMI CODE!', 'GOBBLE!'];
+    // At Christmas an elf does the talking: snow instead of rain, and a jingle.
+    var CALL = xmasOn ? 'JINGLE JINGLE!' : 'GOBBLE!';
+    // The sky hints are worked out when he says them, so they name the sun
+    // at sunset and the moon at night.
+    function sky() { return document.body.classList.contains('sunset') ? 'SUN' : 'MOON'; }
+    var HINTS = [['TYPE GAMECOCKS FOR A SURPRISE!', 'HEADS UP: IT PLAYS SOUND'],
+      function () { return 'CLICK THE ' + sky() + ' 5 TIMES FAST!'; },
+      xmasOn ? 'CLICK THE MOON FOR NORTHERN LIGHTS'
+        : function () { return sky() === 'SUN' ? 'CLICK THE SUN FOR NIGHTTIME' : 'CLICK THE MOON FOR A SUNSET'; },
+      'WATCH THE WATER FOR A BOTTLE', 'TRY THE KONAMI CODE!', CALL].filter(Boolean);
     var hintAt = 0;
     var say2 = svg.querySelector('#tk-say2');
     var note = svg.querySelector('#tk-note');
@@ -249,7 +300,8 @@
         });
       });
       var line = HINTS[hintAt++ % HINTS.length];
-      var stay = line === 'GOBBLE!' ? 3200 + Math.random() * 1500 : (typeof line === 'string' ? 5200 : 6400) + Math.random() * 1200;
+      if (typeof line === 'function') line = line();
+      var stay = line === CALL ? 3200 + Math.random() * 1500 : (typeof line === 'string' ? 5200 : 6400) + Math.random() * 1200;
       setTimeout(function () { speak(p, line); gobble.setAttribute('opacity', '1'); }, 800);
       setTimeout(function () { gobble.setAttribute('opacity', '0'); }, stay - 300);
       setTimeout(function () {
@@ -293,7 +345,7 @@
     json('https://status.willcolumbia.me/runs.json').then(function (d) {
       if (d.status !== 'ok' && d.status !== 'stale') throw d.status;
       return d;
-    }).catch(function () { return json('data/runs.json?v=37'); }).then(function (d) {
+    }).catch(function () { return json('data/runs.json?v=48'); }).then(function (d) {
       var runs = (d && d.recent) || [];
       list.textContent = '';
       if (!runs.length) {
@@ -407,7 +459,7 @@
     var svg = scene.querySelector('svg');
     var g = svg && svg.querySelector('#meteor-shower');
     if (!g) return;
-    if (document.body.classList.contains('raining')) setRain(false);
+    if (document.body.classList.contains('sunset')) setSunset(false);
     var html = '';
     for (var i = 0; i < 28; i++) {
       html += '<g transform="translate(' + Math.round(200 + Math.random() * 1350) + ' ' + Math.round(20 + Math.random() * 260) + ')">' +
@@ -548,6 +600,37 @@
     top25Fetch = top25Flip = null;
   }
 
+  // Christmas only: Santa's sleigh crosses the sky every so often, in a
+  // shallow arc that takes it past the moon, heading either way.
+  function startSanta() {
+    var svg = scene.querySelector('svg');
+    var santa = svg && svg.querySelector('#santa');
+    if (!santa || !xmasOn || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function fly() {
+      var ltr = Math.random() < .5;
+      var x0 = ltr ? -280 : 1880, x1 = ltr ? 1880 : -280;
+      var y0 = 250 + Math.random() * 70, y1 = 250 + Math.random() * 70;
+      var rise = 20 + Math.random() * 40;
+      var duration = 9000 + Math.random() * 3000;
+      var start = performance.now();
+      santa.style.visibility = 'visible';
+      requestAnimationFrame(function step(now) {
+        var t = (now - start) / duration;
+        if (t >= 1) {
+          santa.style.visibility = 'hidden';
+          setTimeout(fly, 45000 + Math.random() * 45000);
+          return;
+        }
+        var x = x0 + (x1 - x0) * t;
+        var y = y0 + (y1 - y0) * t - rise * 4 * t * (1 - t) + Math.sin(now / 420) * 5;
+        var tilt = Math.atan(((y1 - y0) - rise * 4 * (1 - 2 * t)) / (x1 - x0)) * 180 / Math.PI;
+        santa.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + tilt.toFixed(1) + ') scale(' + (ltr ? 1.4 : -1.4) + ' 1.4)');
+        requestAnimationFrame(step);
+      });
+    }
+    setTimeout(fly, 8000);
+  }
+
   // Game day only: a football sails past outside the porch every so often, spiraling.
   function startFootball() {
     var svg = scene.querySelector('svg');
@@ -592,7 +675,8 @@
     { bulbs: ['#ff6b5a', '#5fd38a', '#5aa8ff', '#ffc85a', '#ff8fd0'], wash: '#ffcf9a' },
     { bulbs: ['#9ff0e4', '#7fd6cf'], wash: '#6fd8cc' },
     { bulbs: ['#ff5a6a', '#f6f1e7'], wash: '#e8737f' },
-    { bulbs: ['#ff9a6b', '#ff7fa8', '#ffc46b'], wash: '#ff9d7e' }
+    { bulbs: ['#ff9a6b', '#ff7fa8', '#ffc46b'], wash: '#ff9d7e' },
+    { bulbs: ['#ff4a4a', '#4fe07a', '#ffcf5a', '#5aa8ff', '#fff4dc'], wash: '#ffcf9a' } // Christmas only
   ];
   var WARM = ['#ffbf73', '#e0a45e', '#e0a45e'];
   var SVGNS = 'http://www.w3.org/2000/svg';
@@ -648,7 +732,7 @@
       pickPreset((k + d + swatches.length) % swatches.length, true);
     });
   });
-  pickPreset(0);
+  pickPreset(xmasOn ? 6 : 0);
 
   // Gamecocks scoreboard on the ledge: the live game if one is on,
   // otherwise the most recent final (or the next game before the opener).
